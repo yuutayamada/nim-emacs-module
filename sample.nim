@@ -6,9 +6,7 @@
 import strutils
 import emacs_module as emacs
 
-proc Fmod_test_return_t(env: ptr emacs_env, nargs: ptrdiff_t,
-                        args: ptr emacs_value, data: pointer): emacs_value
-     {.exportc.} =
+emacs.addFunc(Fmod_test_return_t):
   env.intern(env, "t".cstring)
 
 emacs.defuns("libsample", """
