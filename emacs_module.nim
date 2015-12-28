@@ -79,7 +79,7 @@ type
     funcall*: proc(env: ptr emacs_env, function: emacs_value, nargs: ptrdiff_t,
                    args: emacs_value): emacs_value
     intern*: proc(env: ptr emacs_env, symbol_name: cstring): emacs_value {.cdecl.}
-    type_of*: proc(env: ptr emacs_env, value: cstring)
+    type_of*: proc(env: ptr emacs_env, value: emacs_value)
     is_not_nil*: proc(env: ptr emacs_env, value: emacs_value): bool
     eq*: proc(env: ptr emacs_env, value: emacs_value): bool
     extract_integer*: proc(env: ptr emacs_env, value: emacs_value): intmax_t
