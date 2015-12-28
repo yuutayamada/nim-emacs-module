@@ -6,7 +6,7 @@
 import strutils
 import emacs_module as emacs
 
-emacs.addFunc(Fmod_test_return_t):
+emacs.addFunc(Fmod_test_return_t, 0):
   env.intern(env, "t".cstring)
 
 emacs.defuns("libsample", """

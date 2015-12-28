@@ -104,10 +104,11 @@ type
     vec_size*: proc(env: ptr emacs_env, vec: emacs_value): ptrdiff_t
 
 # my memo: http://forum.nim-lang.org/t/1100
-template addFunc*(function_name: expr, body: stmt): stmt {.immediate, dirty.} =
+template addFunc*(function_name: expr, max_args, body: stmt): stmt
+    {.immediate, dirty.} =
   proc function_name*(env: ptr emacs_env, nargs: ptrdiff_t,
-                      args: ptr emacs_value, data: pointer): emacs_value
-     {.exportc.} =
+                      args: ptr array[0..max_args, emacs_value],
+                      data: pointer): emacs_value {.exportc.} =
     body
 
 import strutils
