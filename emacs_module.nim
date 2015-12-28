@@ -83,7 +83,7 @@ type
     is_not_nil*: proc(env: ptr emacs_env, value: emacs_value): bool
     eq*: proc(env: ptr emacs_env, value: emacs_value): bool
     extract_integer*: proc(env: ptr emacs_env, value: emacs_value): intmax_t
-    make_integer*: proc(env: ptr emacs_env, value: emacs_value): emacs_value
+    make_integer*: proc(env: ptr emacs_env, value: intmax_t): emacs_value
     extract_float*: proc(env: ptr emacs_env, value: emacs_value): cdouble # c's double?
     make_float*: proc(env: ptr emacs_env, value: emacs_value): emacs_value
     #
