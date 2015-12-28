@@ -1,3 +1,6 @@
+# This repository is still work in progress
+I realized that I can't compile when I used args from emacs function...
+
 # What is this?
 This is a wrapper library to use Emacs' dynamic library feature from
 Nim language.
