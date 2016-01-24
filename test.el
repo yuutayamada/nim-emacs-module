@@ -32,7 +32,9 @@
   (should (eq t (mod-test-return-t "abc")))
   (should (eq t (mod-test-return-t t)))
   (should (eq t (mod-test-return-t nil)))
-  (should (eq t (mod-test-return-t ?a))))
+  (should (eq t (mod-test-return-t ?a)))
+  (should (string= "uname -a" (mod-test-return-uname-cmd "-a")))
+  (should (eq 156 (mod-test-return-156 ""))))
 
 ;; Local Variables:
 ;; coding: utf-8

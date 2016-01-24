@@ -55,53 +55,58 @@
 
 type
   intmax_t* {.importc: "intmax_t", header: "<inttypes.h>".} = clonglong
-  emacs_finalizer_function* {.importc: "emacs_finalizer_function",
-                              header: "<emacs-module.h>".} = proc(void: pointer)
   emacs_value* {.importc: "struct emacs_value_tag", header: "<emacs-module.h>".} = pointer
   ptrdiff_t* {.importc: "ptrdiff_t", header: "<stddef.h>".} = int
   emacs_env* {.importc: "struct emacs_env_25", header: "<emacs-module.h>".} = object
     size: ptrdiff_t
-    make_global_ref*: proc(env: ptr emacs_env, any_reference: emacs_value): emacs_value
-    free_global_ref*: proc(env: ptr emacs_env, global_reference: emacs_value): pointer
-    # private_members*: ptr emacs_env_private
-    non_local_exit_clear*: proc(env: ptr emacs_env)
-    # non_local_exit_check*: proc (env: ptr emacs_env): emacs_funcall_exit # ?
-    non_local_exit_signal*: proc(env: ptr emacs_env, non_local_exit_symbol: emacs_value,
-                                 non_local_exit_data: emacs_value): pointer
-    non_local_exit_throw*: proc(env: ptr emacs_env, tag: emacs_value,
-                                value: emacs_value): pointer
+    #private_members*: ptr emacs_env_private
+    make_global_ref*: proc (env: ptr emacs_env; any_reference: emacs_value): emacs_value {.
+        cdecl.}
+    free_global_ref*: proc (env: ptr emacs_env; global_reference: emacs_value) {.cdecl.}
+    #non_local_exit_check*: proc (env: ptr emacs_env): emacs_funcall_exit {.cdecl.}
+    non_local_exit_clear*: proc (env: ptr emacs_env) {.cdecl.}
+    # non_local_exit_get*: proc (env: ptr emacs_env;
+    #                          non_local_exit_symbol_out: ptr emacs_value;
+    #                          non_local_exit_data_out: ptr emacs_value): emacs_funcall_exit {.
+    #     cdecl.}
+    non_local_exit_signal*: proc (env: ptr emacs_env;
+                                non_local_exit_symbol: emacs_value;
+                                non_local_exit_data: emacs_value) {.cdecl.}
+    non_local_exit_throw*: proc (env: ptr emacs_env; tag: emacs_value;
+                               value: emacs_value) {.cdecl.}
     # Function registration
-    make_function*: proc (env: ptr emacs_env; min_arity, max_arity: ptrdiff_t;
-                          function: proc(env: ptr emacs_env, nargs: ptrdiff_t,
-                                         args: emacs_value),
-                          documentation: cstring,
-                          data: pointer)
-    funcall*: proc(env: ptr emacs_env, function: emacs_value, nargs: ptrdiff_t,
-                   args: emacs_value): emacs_value
-    intern*: proc(env: ptr emacs_env, symbol_name: cstring): emacs_value {.cdecl.}
-    type_of*: proc(env: ptr emacs_env, value: emacs_value)
-    is_not_nil*: proc(env: ptr emacs_env, value: emacs_value): bool
-    eq*: proc(env: ptr emacs_env, value: emacs_value): bool
-    extract_integer*: proc(env: ptr emacs_env, value: emacs_value): intmax_t
-    make_integer*: proc(env: ptr emacs_env, value: intmax_t): emacs_value
-    extract_float*: proc(env: ptr emacs_env, value: emacs_value): cdouble # c's double?
-    make_float*: proc(env: ptr emacs_env, value: emacs_value): emacs_value
+    make_function*: proc (env: ptr emacs_env; min_arity: ptrdiff_t;
+                        max_arity: ptrdiff_t; function: proc (env: ptr emacs_env;
+        nargs: ptrdiff_t; args: ptr emacs_value; a5: pointer): emacs_value {.cdecl.};
+                        documentation: cstring; data: pointer): emacs_value {.cdecl.}
+    funcall*: proc (env: ptr emacs_env; function: emacs_value; nargs: ptrdiff_t;
+                  args: ptr emacs_value): emacs_value {.cdecl.}
+    intern*: proc (env: ptr emacs_env; symbol_name: cstring): emacs_value {.cdecl.}
+    type_of*: proc (env: ptr emacs_env; value: emacs_value): emacs_value {.cdecl.}
+    is_not_nil*: proc (env: ptr emacs_env; value: emacs_value): bool {.cdecl.}
+    eq*: proc (env: ptr emacs_env; a: emacs_value; b: emacs_value): bool {.cdecl.}
+    extract_integer*: proc (env: ptr emacs_env; value: emacs_value): intmax_t {.cdecl.}
+    make_integer*: proc (env: ptr emacs_env; value: intmax_t): emacs_value {.cdecl.}
+    extract_float*: proc (env: ptr emacs_env; value: emacs_value): cdouble {.cdecl.}
+    make_float*: proc (env: ptr emacs_env; value: cdouble): emacs_value {.cdecl.}
     #
-    copy_string_contents*: proc(env: ptr emacs_env, value: emacs_value,
-                                buffer: ptr char, size_inout: ptr ptrdiff_t): bool
+    copy_string_contents*: proc (env: ptr emacs_env; value: emacs_value;
+                               buffer: cstring; size_inout: ptr ptrdiff_t): bool {.cdecl.}
     # Create a Lisp string from a utf8 encoded string.
-    make_string*: proc(env: ptr emacs_env, value:emacs_value, buffer: ptr char,
-                       size_inoiut: ptr ptrdiff_t): emacs_value
-    make_user_ptr*: proc(env: ptr emacs_env, fin: emacs_finalizer_function,
-                         p: pointer): emacs_value
-    get_user_ptr*: proc(env: ptr emacs_env, uptr: emacs_value): pointer
-    set_user_ptr*: proc(env: ptr emacs_env, uptr: emacs_value, p: pointer)
-    get_user_finalizer*: proc(env: ptr emacs_env, uptr: emacs_value): emacs_finalizer_function
-    set_user_finalizer*: proc(env: ptr emacs_env, uptr: emacs_value, fin: emacs_finalizer_function)
-    # vector
-    vec_get*: proc(env: ptr emacs_env, vec: emacs_value, i: ptrdiff_t): emacs_value
-    vec_set*: proc(env: ptr emacs_env, vec: emacs_value, i: ptrdiff_t, val: emacs_value)
-    vec_size*: proc(env: ptr emacs_env, vec: emacs_value): ptrdiff_t
+    make_string*: proc (env: ptr emacs_env; contents: cstring; length: ptrdiff_t): emacs_value {.
+        cdecl.}
+    make_user_ptr*: proc (env: ptr emacs_env; fin: proc (a2: pointer) {.cdecl.};
+                        `ptr`: pointer): emacs_value {.cdecl.}
+    get_user_ptr*: proc (env: ptr emacs_env; uptr: emacs_value): pointer {.cdecl.}
+    set_user_ptr*: proc (env: ptr emacs_env; uptr: emacs_value; `ptr`: pointer) {.cdecl.}
+    set_user_finalizer*: proc (env: ptr emacs_env; uptr: emacs_value;
+                             fin: proc (a2: pointer) {.cdecl.}) {.cdecl.}
+    # Vector
+    vec_get*: proc (env: ptr emacs_env; vec: emacs_value; i: ptrdiff_t): emacs_value {.
+        cdecl.}
+    vec_set*: proc (env: ptr emacs_env; vec: emacs_value; i: ptrdiff_t; val: emacs_value) {.
+        cdecl.}
+    vec_size*: proc (env: ptr emacs_env; vec: emacs_value): ptrdiff_t {.cdecl.}
 
 # my memo: http://forum.nim-lang.org/t/1100
 template addFunc*(function_name: expr, max_args, body: stmt): stmt
@@ -143,7 +148,7 @@ int
 emacs_module_init (struct emacs_runtime *ert)
 {
   emacs_env *env = ert->get_environment (ert);
-
+  NimMain();
 #define DEFUN(lsym, csym, amin, amax, doc, data) \
   bind_function (env, lsym, \
      env->make_function (env, amin, amax, csym, doc, data))
