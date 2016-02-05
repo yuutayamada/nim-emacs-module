@@ -91,6 +91,7 @@ type
                     args: ptr emacs_value): emacs_value {.cdecl.}
     intern*: proc (env: ptr emacs_env;
                    symbol_name: cstring): emacs_value {.cdecl.}
+    # Type Conversion
     type_of*: proc (env: ptr emacs_env;
                     value: emacs_value): emacs_value {.cdecl.}
     is_not_nil*: proc (env: ptr emacs_env;
@@ -105,7 +106,7 @@ type
                           value: emacs_value): cdouble {.cdecl.}
     make_float*: proc (env: ptr emacs_env;
                        value: cdouble): emacs_value {.cdecl.}
-    #
+    # String manipulation
     copy_string_contents*: proc (env: ptr emacs_env;
                                  value: emacs_value;
                                  buffer: cstring;
@@ -170,7 +171,7 @@ int
 emacs_module_init (struct emacs_runtime *ert)
 {
   emacs_env *env = ert->get_environment (ert);
-  NimMain();
+  NimMain(); // <- Nim executes this in `main` function
 #define DEFUN(lsym, csym, amin, amax, doc, data) \
   bind_function (env, lsym, \
      env->make_function (env, amin, amax, csym, doc, data))
