@@ -33,8 +33,12 @@
   (should (eq t (mod-test-return-t t)))
   (should (eq t (mod-test-return-t nil)))
   (should (eq t (mod-test-return-t ?a)))
-  (should (string= "uname -a" (mod-test-return-uname-cmd "-a")))
-  (should (eq 156 (mod-test-return-156 ""))))
+  (should (string= "uname -a" (mod-test-return-uname-cmd "-a"))))
+
+(ert-deftest mod-test-sum ()
+  (should (eq 10 (mod-test-sum 3 7)))
+  (should-error (mod-test-sum "1" 2) :type 'wrong-type-argument)
+  (should-error (mod-test-sum 2 "1") :type 'wrong-type-argument))
 
 ;; Local Variables:
 ;; coding: utf-8
