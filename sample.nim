@@ -12,17 +12,17 @@ emacs.addFunc(Fmod_test_return_t, 0):
 
 emacs.addFunc(Fmod_test_return_uname_cmd, 1):
   var len: ptrdiff_t
-  if( env.copy_string_contents(env,args[0], nil, addr len )):
+  if (env.copy_string_contents(env, args[0], nil, addr len)):
     var buf1 = newString(len)
-    if(env.copy_string_contents(env,args[0], addr buf1[0], addr len )):
+    if (env.copy_string_contents(env, args[0], addr buf1[0], addr len)):
       var res = "uname " & $buf1
       result = env.make_string(env, addr res[0], res.len - 1 )
 
 emacs.addFunc(Fmod_test_return_uname, 1):
   var len: ptrdiff_t
-  if( env.copy_string_contents(env,args[0], nil, addr len )):
+  if (env.copy_string_contents(env, args[0], nil, addr len)):
     var buf1 = newString(len)
-    if(env.copy_string_contents(env,args[0], addr buf1[0], addr len )):
+    if (env.copy_string_contents(env, args[0], addr buf1[0], addr len)):
       var (res, errC) = execCmdEx("uname " & $buf1 )
       result = env.make_string(env, addr res[0], res.len - 1)
 
