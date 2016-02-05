@@ -7,5 +7,5 @@ license       = "GPLv3"
 
 # Dependencies
 
-requires "nim >= 0.12.1"
+requires "nim >= 0.13.1"
 
