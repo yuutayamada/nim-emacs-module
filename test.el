@@ -40,6 +40,16 @@
   (should-error (mod-test-sum "1" 2) :type 'wrong-type-argument)
   (should-error (mod-test-sum 2 "1") :type 'wrong-type-argument))
 
+(ert-deftest mod-test-vector-test ()
+  (dolist (s '(2 10 100 1000))
+    (dolist (e '(42 foo "foo" 3.14))
+      (let* ((v-ref (make-vector 2 e))
+             (eq-ref (eq (aref v-ref 0) (aref v-ref 1)))
+             (v-test (make-vector s nil)))
+
+        (should (eq (mod-test-vector-fill v-test e) t))
+        (should (eq (mod-test-vector-eq v-test e) eq-ref))))))
+
 ;; Local Variables:
 ;; coding: utf-8
 ;; mode: emacs-lisp
