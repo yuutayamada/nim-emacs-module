@@ -32,7 +32,9 @@
   (should (eq t (mod-test-return-t "abc")))
   (should (eq t (mod-test-return-t t)))
   (should (eq t (mod-test-return-t nil)))
-  (should (eq t (mod-test-return-t ?a)))
+  (should (eq t (mod-test-return-t ?a))))
+
+(ert-deftest mod-test-return-uname-cmd ()
   (should (string= "uname -a" (mod-test-return-uname-cmd "-a"))))
 
 (ert-deftest mod-test-sum ()
