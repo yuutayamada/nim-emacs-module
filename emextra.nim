@@ -1,6 +1,6 @@
 import strutils, emacs_module
 
-# my memo: (setq-local jit-lock-contextually nil)
+# my memo:
 #   immediate, and dirty: http://forum.nim-lang.org/t/1100
 #   expr, stmt, typed, and untyped: http://forum.nim-lang.org/t/2025
 template addFunc*(function_name, max_args, body: typed): typed
