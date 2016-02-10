@@ -35,9 +35,32 @@ emacs.addFunc(Fmod_test_sum, 1):
 
   env.make_integer(env, s)
 
+emacs.addFunc(Fmod_test_vector_fill, 2):
+  var
+    vec = args[0]
+    val = args[1]
+    size = env.vec_size(env, vec)
+
+  for i in 0 ..< size:
+    env.vec_set(env, vec, i, val)
+  result = env.intern(env, "t")
+
+
+emacs.addFunc(Fmod_test_vector_eq, 2):
+  var
+    vec = args[0]
+    val = args[1]
+    size = env.vec_size(env, vec)
+  for i in 0 ..< size:
+    if not env.eq(env, env.vec_get(env, vec, i), val):
+      result = env.intern(env, "nil")
+  result = env.intern(env, "t")
+
 emacs.defuns("libsample", """
 DEFUN ("mod-test-return-t", Fmod_test_return_t, 1, 1, NULL, NULL);
 DEFUN ("mod-test-return-uname", Fmod_test_return_uname, 1, 1, NULL, NULL);
 DEFUN ("mod-test-return-uname-cmd", Fmod_test_return_uname_cmd, 1, 1, NULL, NULL);
 DEFUN ("mod-test-sum", Fmod_test_sum, 2, 2, NULL, NULL);
+DEFUN ("mod-test-vector-fill", Fmod_test_vector_fill, 2, 2, NULL, NULL);
+DEFUN ("mod-test-vector-eq", Fmod_test_vector_eq, 2, 2, NULL, NULL);
 """)
