@@ -85,7 +85,7 @@ type
   emacs_funcall_exit* = enum
     emacs_funcall_exit_return = 0, # Function has returned normally.
     emacs_funcall_exit_signal = 1, # Function has signaled an error using `signal'.
-    emacs_funcall_exit_throw = 2   # Function has exit using `throw'.
+    emacs_funcall_exit_throw  = 2  # Function has exit using `throw'.
 
   emacs_env* {.importc: "struct emacs_env_25",
                header: "<emacs-module.h>".} = object

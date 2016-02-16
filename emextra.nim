@@ -14,7 +14,7 @@ template addFunc*(function_name, max_args, body: typed): typed
     body
 
 template defuns* (package_name, defuns: typed): typed =
-    {.emit:"""
+    {.emit: """
 /* Lisp utilities for easier readability (simple wrappers).  */
 
 /* Provide FEATURE to Emacs.  */
