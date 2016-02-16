@@ -1,4 +1,4 @@
-# `plugin_is_GPL_compatible' indicates that its code is
+# `plugin_is_GPL_compatible` indicates that its code is
 # released under the GPL or compatible license; Emacs will refuse to
 # load modules that don't export such a symbol.
 {.emit:"int plugin_is_GPL_compatible;".}
