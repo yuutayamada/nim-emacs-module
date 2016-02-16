@@ -52,6 +52,16 @@
         (should (eq (mod-test-vector-fill v-test e) t))
         (should (eq (mod-test-vector-eq v-test e) eq-ref))))))
 
+(ert-deftest mod-test-non-local-exit-signal-test ()
+  (should-error (mod-test-signal)))
+
+(ert-deftest mod-test-non-local-exit-throw-test ()
+  (should (equal
+           (catch 'tag
+             (mod-test-throw)
+             (ert-fail "expected throw"))
+           42)))
+
 ;; Local Variables:
 ;; coding: utf-8
 ;; mode: emacs-lisp
