@@ -3,7 +3,7 @@
 # load modules that don't export such a symbol.
 {.emit:"int plugin_is_GPL_compatible;".}
 
-import strutils, emacs_module
+import emacs_module
 import emextra as emacs
 from osproc import execCmdEx
 

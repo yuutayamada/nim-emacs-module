@@ -1,4 +1,5 @@
-import strutils, emacs_module
+import strutils as su
+import emacs_module
 
 # my memo:
 #   immediate, and dirty: http://forum.nim-lang.org/t/1100
@@ -13,8 +14,12 @@ template addFunc*(function_name, max_args, body: typed): typed
                       data: pointer): emacs_value {.exportc.} =
     body
 
+
+template emitBody(body: typed): typed =
+    {.emit: body.}
+
 template defuns* (package_name, defuns: typed): typed =
-    {.emit: """
+  emitBody(su.format("""
 /* Lisp utilities for easier readability (simple wrappers).  */
 
 /* Provide FEATURE to Emacs.  */
@@ -56,4 +61,4 @@ emacs_module_init (struct emacs_runtime *ert)
   return 0;
 
 }
-""".format(defuns, package_name).}
+""", defuns, package_name))
