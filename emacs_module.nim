@@ -114,7 +114,7 @@ type
                           function: proc (env: ptr emacs_env;
                                           nargs: ptrdiff_t;
                                           args: ptr emacs_value;
-                                          a5: pointer): emacs_value {.cdecl.},
+                                          _: pointer): emacs_value {.cdecl.},
                           documentation: cstring;
                           data: pointer): emacs_value {.cdecl.}
     funcall*: proc (env: ptr emacs_env; function: emacs_value; nargs: ptrdiff_t;
@@ -151,7 +151,7 @@ type
 
     # Embedded pointer type.
     make_user_ptr*: proc (env: ptr emacs_env;
-                          fin: proc (a2: pointer) {.cdecl.},
+                          fin: proc (_: pointer) {.cdecl.},
                           `ptr`: pointer): emacs_value {.cdecl.}
     get_user_ptr*: proc (env: ptr emacs_env;
                          uptr: emacs_value): pointer {.cdecl.}
@@ -159,7 +159,7 @@ type
                          uptr: emacs_value; `ptr`: pointer) {.cdecl.}
 
     set_user_finalizer*: proc (env: ptr emacs_env; uptr: emacs_value;
-                               fin: proc (a2: pointer) {.cdecl.}) {.cdecl.}
+                               fin: proc (_: pointer) {.cdecl.}) {.cdecl.}
 
     # Vector
     vec_get*: proc (env: ptr emacs_env;
