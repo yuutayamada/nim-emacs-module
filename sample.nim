@@ -56,6 +56,17 @@ emacs.addFunc(Fmod_test_vector_eq, 2):
       result = env.intern(env, "nil")
   result = env.intern(env, "t")
 
+emacs.addFunc(Fmod_test_signal, 0):
+  assert(env.non_local_exit_check(env) == emacs_funcall_exit_return)
+  env.non_local_exit_signal(env, env.intern(env, "error"),
+                            env.make_integer(env, 100))
+
+emacs.addFunc(Fmod_test_throw, 0):
+  assert(env.non_local_exit_check(env) == emacs_funcall_exit_return)
+  env.non_local_exit_throw(env, env.intern(env, "tag"),
+                           env.make_integer(env, 42))
+  result = env.intern(env, "nil")
+
 emacs.defuns("libsample", """
 DEFUN ("mod-test-return-t", Fmod_test_return_t, 1, 1, NULL, NULL);
 DEFUN ("mod-test-return-uname", Fmod_test_return_uname, 1, 1, NULL, NULL);
@@ -63,4 +74,6 @@ DEFUN ("mod-test-return-uname-cmd", Fmod_test_return_uname_cmd, 1, 1, NULL, NULL
 DEFUN ("mod-test-sum", Fmod_test_sum, 2, 2, NULL, NULL);
 DEFUN ("mod-test-vector-fill", Fmod_test_vector_fill, 2, 2, NULL, NULL);
 DEFUN ("mod-test-vector-eq", Fmod_test_vector_eq, 2, 2, NULL, NULL);
+DEFUN ("mod-test-signal", Fmod_test_signal, 0, 0, NULL, NULL);
+DEFUN ("mod-test-throw", Fmod_test_throw, 0, 0, NULL, NULL);
 """)
