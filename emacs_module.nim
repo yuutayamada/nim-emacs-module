@@ -70,7 +70,6 @@ type
   ## Function prototype for the module Lisp functions.
   emacs_subr* = proc(env: ptr emacs_env, nargs: ptrdiff_t,
                      args: ptr emacs_value, data: pointer): emacs_value {.cdecl.}
-
   emacs_runtime* {.importc: "struct emacs_runtime",
                    header: "<emacs-module.h>".} = object ## \
     ## Struct passed to a module init function (emacs_module_init).
