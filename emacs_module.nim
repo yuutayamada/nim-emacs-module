@@ -60,6 +60,7 @@ type
 type
   emacs_runtime_private {.importc: "struct emacs_runtime_private",
                           header: "<emacs-module.h>".} = object
+
   emacs_env_private {.importc: "struct emacs_env_private",
                       header: "<emacs-module.h>".} = object
 
