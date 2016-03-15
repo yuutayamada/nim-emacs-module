@@ -14,7 +14,7 @@ proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
 # my memo:
 #   immediate, and dirty: http://forum.nim-lang.org/t/1100
 #   expr, stmt, typed, and untyped: http://forum.nim-lang.org/t/2025
-template addFunc*(self, function_name, max_args, body: untyped)
+template defun*(self, function_name, max_args, body: untyped)
     {.dirty, immediate.} = ## \
   ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
   ## args: ptr array[0..max_args, emacs_value], data: pointer):
