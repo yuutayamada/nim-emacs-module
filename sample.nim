@@ -7,10 +7,7 @@ import emacs_module
 import emextra
 from osproc import execCmdEx
 
-static:
-  var emacs = Emacs()
-  emacs.functions = ""
-
+init(emacs)
 
 emacs.defun(Fmod_test_return_t, 1):
   env.intern(env, "t".cstring)

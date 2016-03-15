@@ -4,6 +4,11 @@ import emacs_module
 type Emacs* = object
   functions*: string
 
+template init*(sym: untyped): untyped =
+  static:
+    var sym = Emacs()
+    sym.functions = ""
+
 proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
   let emacs_func = su.replace(fn.substr(1, high(fn)), "_", "-")
   self.functions.add(
