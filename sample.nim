@@ -3,14 +3,16 @@
 # load modules that don't export such a symbol.
 {.emit:"int plugin_is_GPL_compatible;".}
 
-import emacs_module
-import emextra
+import emacs_module # primitive wrapper for emacs_module.h
+import emextra      # helper library
 
 init(emacs)
 
+# intern
 emacs.defun(Fmod_test_return_t, 1):
   env.intern(env, "t".cstring)
 
+# extract_integer
 emacs.defun(Fmod_test_sum, 2):
   assert(nargs == 2)
   let
@@ -20,6 +22,7 @@ emacs.defun(Fmod_test_sum, 2):
 
   env.make_integer(env, s)
 
+# vec_size
 emacs.defun(Fmod_test_vector_fill, 2):
   var
     vec = args[0]
@@ -30,7 +33,7 @@ emacs.defun(Fmod_test_vector_fill, 2):
     env.vec_set(env, vec, i, val)
   result = env.intern(env, "t")
 
-
+# vec_get
 emacs.defun(Fmod_test_vector_eq, 2):
   var
     vec = args[0]
@@ -41,6 +44,7 @@ emacs.defun(Fmod_test_vector_eq, 2):
       result = env.intern(env, "nil")
   result = env.intern(env, "t")
 
+# non_local_exit_signal
 emacs.defun(Fmod_test_signal, 0):
   assert(env.non_local_exit_check(env) == emacs_funcall_exit_return)
   env.non_local_exit_signal(env, env.intern(env, "error"),
