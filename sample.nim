@@ -4,10 +4,15 @@
 {.emit:"int plugin_is_GPL_compatible;".}
 
 import emacs_module
-import emextra as emacs
+import emextra
 from osproc import execCmdEx
 
-emacs.addFunc(Fmod_test_return_t, 0):
+static:
+  var emacs = Emacs()
+  emacs.functions = ""
+
+
+emacs.addFunc(Fmod_test_return_t, 1):
   env.intern(env, "t".cstring)
 
 emacs.addFunc(Fmod_test_return_uname_cmd, 1):
@@ -26,7 +31,7 @@ emacs.addFunc(Fmod_test_return_uname, 1):
       var (res, _) = execCmdEx("uname " & $buf1 )
       result = env.make_string(env, addr res[0], res.len - 1)
 
-emacs.addFunc(Fmod_test_sum, 1):
+emacs.addFunc(Fmod_test_sum, 2):
   assert(nargs == 2)
   let
     a = env.extract_integer(env, args[0])
@@ -67,13 +72,4 @@ emacs.addFunc(Fmod_test_throw, 0):
                            env.make_integer(env, 42))
   result = env.intern(env, "nil")
 
-emacs.defuns("libsample", """
-DEFUN ("mod-test-return-t", Fmod_test_return_t, 1, 1, NULL, NULL);
-DEFUN ("mod-test-return-uname", Fmod_test_return_uname, 1, 1, NULL, NULL);
-DEFUN ("mod-test-return-uname-cmd", Fmod_test_return_uname_cmd, 1, 1, NULL, NULL);
-DEFUN ("mod-test-sum", Fmod_test_sum, 2, 2, NULL, NULL);
-DEFUN ("mod-test-vector-fill", Fmod_test_vector_fill, 2, 2, NULL, NULL);
-DEFUN ("mod-test-vector-eq", Fmod_test_vector_eq, 2, 2, NULL, NULL);
-DEFUN ("mod-test-signal", Fmod_test_signal, 0, 0, NULL, NULL);
-DEFUN ("mod-test-throw", Fmod_test_throw, 0, 0, NULL, NULL);
-""")
+emacs.provide("libsample")

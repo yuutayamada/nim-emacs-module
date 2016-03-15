@@ -1,24 +1,37 @@
 import strutils as su
 import emacs_module
 
+type Emacs* = object
+  functions*: string
+
+proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
+  let emacs_func = su.replace(fn.substr(1, high(fn)), "_", "-")
+  self.functions.add(
+    su.format("""DEFUN ("$1", $2, $3, $4, NULL, NULL);""",
+              emacs_func, fn, max_args, max_args)
+  )
+
 # my memo:
 #   immediate, and dirty: http://forum.nim-lang.org/t/1100
 #   expr, stmt, typed, and untyped: http://forum.nim-lang.org/t/2025
-template addFunc*(function_name, max_args, body: typed): typed
-    {.immediate, dirty.} = ## \
-      ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
-      ## args: ptr array[0..max_args, emacs_value], data: pointer):
-      ## emacs_value {.exportc.}
+template addFunc*(self, function_name, max_args, body: untyped)
+    {.dirty, immediate.} = ## \
+  ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
+  ## args: ptr array[0..max_args, emacs_value], data: pointer):
+  ## emacs_value {.exportc.}
+  static:
+    self.storeFunction(astToStr(function_name), max_args)
   proc function_name*(env: ptr emacs_env, nargs: ptrdiff_t,
                       args: ptr array[0..max_args, emacs_value],
-                      data: pointer): emacs_value {.exportc.} =
+                      data: pointer): emacs_value {.exportc.}=
     body
 
 
 template emitBody(body: typed): typed =
-    {.emit: body.}
+  {.emit: body.}
 
-template defuns* (package_name, defuns: typed): typed =
+template provide* (self, package_name: typed) =
+  doAssert(package_name is string)
   emitBody(su.format("""
 /* Lisp utilities for easier readability (simple wrappers).  */
 
@@ -61,4 +74,4 @@ emacs_module_init (struct emacs_runtime *ert)
   return 0;
 
 }
-""", defuns, package_name))
+""", self.functions, package_name))
