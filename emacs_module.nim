@@ -69,8 +69,10 @@ type
   emacs_init_function* = proc (ert: ptr emacs_runtime): cint {.cdecl.}
 
   ## Function prototype for the module Lisp functions.
-  emacs_subr* = proc(env: ptr emacs_env, nargs: ptrdiff_t,
-                     args: ptr emacs_value, data: pointer): emacs_value {.cdecl.}
+  emacs_subr* = proc(env: ptr emacs_env,
+                     nargs: ptrdiff_t,
+                     args: ptr emacs_value,
+                     data: pointer): emacs_value {.cdecl.}
   emacs_runtime* {.importc: "struct emacs_runtime",
                    header: "<emacs-module.h>".} = object ## \
     ## Struct passed to a module init function (emacs_module_init).
@@ -95,7 +97,8 @@ type
                             any_reference: emacs_value): emacs_value {.cdecl.}
     free_global_ref*: proc (env: ptr emacs_env;
                             global_reference: emacs_value) {.cdecl.}
-    non_local_exit_check*: proc (env: ptr emacs_env): emacs_funcall_exit {.cdecl.}
+    non_local_exit_check*:
+      proc (env: ptr emacs_env): emacs_funcall_exit {.cdecl.}
     non_local_exit_clear*: proc (env: ptr emacs_env) {.cdecl.}
     non_local_exit_get*: proc (env: ptr emacs_env;
                                non_local_exit_symbol_out: ptr emacs_value;
@@ -171,3 +174,4 @@ type
 proc emacs_module_init*(ert: ptr emacs_runtime): cint
     {.importc: "emacs_module_init", header: "<emacs_module.h>".} ## \
       ## Every module should define a function as follows.
+
