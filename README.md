@@ -16,6 +16,7 @@ something wrong... So beware. (PRs are welcome!)
 ## Usage
 See sample.nim and Makefile
 
-## Other Reference
+## Other References
+- [Introduction to Emacs modules](http://diobla.info/blog-archive/modules-tut.html)
 - [emacs-mruby-test](https://github.com/syohex/emacs-mruby-test)
 - M-x view-emacs-news and then look at `Emacs can now load shared/dynamic libraries (modules).` section
