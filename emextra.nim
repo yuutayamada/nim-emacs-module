@@ -1,36 +1,49 @@
 import strutils as su
 import emacs_module
+import macros as m
 
 type Emacs* = object
   functions*: string
+  libName*: string
 
 template init*(sym: untyped): untyped =
   static:
     var sym = Emacs()
     sym.functions = ""
 
+template makeProc*(self, function_name, max_args, body: untyped) {.dirty.} =
+  # Add nimEmacs prefix for C function.
+  proc `nimEmacs function_name`*(env: ptr emacs_env, nargs: ptrdiff_t,
+                                 args: ptr array[0..max_args, emacs_value],
+                                 data: pointer): emacs_value {.exportc.} =
+    body
+
 proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
-  let emacs_func = su.replace(fn.substr(1, high(fn)), "_", "-")
+  let
+    emacs_func = su.replace(fn, "_", "-")
+    nim_func = "nimEmacs" & fn
+
   self.functions.add(
     su.format("""DEFUN ("$1", $2, $3, $4, NULL, NULL);""",
-              emacs_func, fn, max_args, max_args)
+              emacs_func, nim_func, max_args, max_args)
   )
 
 # my memo:
 #   immediate, and dirty: http://forum.nim-lang.org/t/1100
 #   expr, stmt, typed, and untyped: http://forum.nim-lang.org/t/2025
-template defun*(self, function_name, max_args, body: untyped)
-    {.dirty, immediate.} = ## \
+#   http://forum.nim-lang.org/t/2228
+template defun*(self, function_name, max_args, body: untyped) {.dirty.} = ## \
   ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
   ## args: ptr array[0..max_args, emacs_value], data: pointer):
   ## emacs_value {.exportc.}
+  ## The `function_name` is registered as the name in emacs and also
+  ## be registered in Nim with nimEmacs prefix.
+  ## If you include "_" in the function name, it will be converted "-"
+  ## in Emacs.
   static:
     self.storeFunction(astToStr(function_name), max_args)
-  proc function_name*(env: ptr emacs_env, nargs: ptrdiff_t,
-                      args: ptr array[0..max_args, emacs_value],
-                      data: pointer): emacs_value {.exportc.}=
-    body
 
+  self.makeProc(function_name, max_args): body
 
 template emitBody(body: typed): typed =
   {.emit: body.}
