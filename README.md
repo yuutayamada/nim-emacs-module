@@ -11,7 +11,7 @@ I'm either Nim and C language's newbie, so probably I'm doing
 something wrong... So beware. (PRs are welcome!)
 
 ## Usage
-See sample.nim and Makefile
+See sample.nim and Makefile of test directory
 
 ## Other References
 - [Introduction to Emacs modules](http://diobla.info/blog-archive/modules-tut.html)
