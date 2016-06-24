@@ -6,10 +6,12 @@ CFLAGS = --passC:-I$(EMACS_SRC) --passC:-std=gnu99
 
 .PHONY: test
 
-all: libsample.so
+all: sample.so
 
-libsample.so: sample.nim
-	nim c --app:lib $(CFLAGS) $<
+sample.so: sample.nim
+	nim c --out:sample.so --app:lib $(CFLAGS) $<
+
+# nim c --out:sample.so --import:../emacs_module.nim --import:../emextra.nim --app:lib $(CFLAGS) $<
 
 test:
 	$(EMACS) -Q -L . $(LOADPATH) -l test.el -f ert-run-tests-batch-and-exit

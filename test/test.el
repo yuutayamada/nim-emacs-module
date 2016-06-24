@@ -25,7 +25,8 @@
 
 (add-to-list 'load-path
              (file-name-directory (or #$ (expand-file-name (buffer-file-name)))))
-(require 'libsample)
+
+(require 'sample)
 
 (ert-deftest mod-test-return-t ()
   (should (eq t (mod-test-return-t 0)))
