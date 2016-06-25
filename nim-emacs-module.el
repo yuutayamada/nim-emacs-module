@@ -215,11 +215,15 @@ emacs.defun(mod_test_return_t, 1):
        'nim-emacs-module-compile
      'nim-compile)))
 
-(with-eval-after-load "nim-mode"
-  (advice-add 'nim-compile :around 'nim-compile-or-module-compile))
+(defun nim-emacs-module-setup-nim-mode ()
+  "Setup for nim-mode."
+  (remove-hook 'nim-mode-hook 'nim-emacs-module-setup-nim-mode)
+  (with-no-warnings
+    (define-key nim-mode-map [remap nim-compile] 'nim-compile-or-module-compile)))
 
-;; ;; for nim-emacs-module.el
-;; (add-to-list 'load-path "~/local/vcs/github.com/yuutayamada/nim-emacs-module/")
+;;;###autoload
+(with-eval-after-load "nim-mode"
+  (add-hook 'nim-mode-hook 'nim-emacs-module-setup-nim-mode))
 
 (provide 'nim-emacs-module)
 
