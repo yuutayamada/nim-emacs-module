@@ -11,11 +11,11 @@ template init*(sym: untyped): untyped =
     var sym = Emacs()
     sym.functions = ""
 
-template makeProc*(self, function_name, max_args, body: untyped) {.dirty.} =
+template makeProc*(self, fsym, max_args, body: untyped) {.dirty.} =
   # Add nimEmacs prefix for C function.
-  proc `nimEmacs function_name`*(env: ptr emacs_env, nargs: ptrdiff_t,
-                                 args: ptr array[0..max_args, emacs_value],
-                                 data: pointer): emacs_value {.exportc.} =
+  proc `nimEmacs fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
+                        args: ptr array[0..max_args, emacs_value],
+                        data: pointer): emacs_value {.exportc.} =
     body
 
 proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
