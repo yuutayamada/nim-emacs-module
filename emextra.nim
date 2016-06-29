@@ -6,7 +6,7 @@ type Emacs* = object
   functions*: string
   libName*: string
 
-proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
+proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
   let
     emacs_func = su.replace(fn, "_", "-")
     nim_func = "nimEmacs" & fn
@@ -29,7 +29,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
   ## If you include "_" in the function name, it will be converted "-"
   ## in Emacs.
   static:
-    self.storeFunction(astToStr(fsym), max_args)
+    self.pushFunction(astToStr(fsym), max_args)
 
   proc `nimEmacs fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
                         args: ptr array[0..max_args, emacs_value],
