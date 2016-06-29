@@ -69,28 +69,25 @@ import emacs_module # Primitive wrapper for emacs_module.h
 import emextra      # Helper library
 
 
-# You can access those four properties, which are used in `makeProc`.
-{.experimental.}
-using
-  env: ptr emacs_env
-  nargs: ptrdiff_t
-  data: pointer
-  # The the second arg of `defun` proc will be this `max_args`.
-  # args: ptr array[0..max_args, emacs_value]
-
+# You can access following types:
+#
+#   env: ptr emacs_env
+#   nargs: ptrdiff_t
+#   args: ptr array[0..max_args, emacs_value]
+#   data: pointer
 
 init(emacs)
 
 %s
 
 # Provide functions registered by above from here.
-emacs.provide(\"%s\")%s"
+emacs.provide()%s"
   "Template string.")
 
 (defvar nim-emacs-module-template-example
   '((example . "
-# Example:
-emacs.defun(mod_test_return_t, 1):
+# Example(Create a file named `mod_test.nim`):
+emacs.defun(return_t, 1):
   env.intern(env, \"t\".cstring)")
     (test . "
 
@@ -100,8 +97,10 @@ emacs.defun(mod_test_return_t, 1):
 #
 # and then in *scratch* buffer, evaluate those lines:
 #
+#   The file name ‘mod-test‘ is added as prefix name of each functions and
+#   its package name.
 #   (require '%s)
-#   (mod_test_return_t)"))
+#   (mod-test-return-t)"))
   "Additional template.")
 
 (defvar nim-emacs-module-dir
