@@ -87,7 +87,12 @@ template provide*(self, package_name: typed): typed =
   {.emit: provideString(self, package_name).}
 
 
-template init*(sym: untyped): untyped =
+template init*(sym: untyped): untyped {.dirty.} =
+  from os import splitFile
+
   static:
     var sym = Emacs()
+    let info = instantiationInfo()
+    let currentfile = splitFile(info.filename).name
     sym.functions = ""
+    sym.libName = currentfile
