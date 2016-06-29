@@ -6,11 +6,6 @@ type Emacs* = object
   functions*: string
   libName*: string
 
-template init*(sym: untyped): untyped =
-  static:
-    var sym = Emacs()
-    sym.functions = ""
-
 proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
   let
     emacs_func = su.replace(fn, "_", "-")
@@ -90,3 +85,8 @@ emacs_module_init (struct emacs_runtime *ert)
 
 }
 """, self.functions, package_name))
+
+template init*(sym: untyped): untyped =
+  static:
+    var sym = Emacs()
+    sym.functions = ""
