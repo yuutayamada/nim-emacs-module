@@ -28,38 +28,38 @@
 
 (require 'sample)
 
-(ert-deftest mod-test-return-t ()
-  (should (eq t (mod-test-return-t 0)))
-  (should (eq t (mod-test-return-t "abc")))
-  (should (eq t (mod-test-return-t t)))
-  (should (eq t (mod-test-return-t nil)))
-  (should (eq t (mod-test-return-t ?a))))
+(ert-deftest sample-mod-test-return-t ()
+  (should (eq t (sample-mod-test-return-t 0)))
+  (should (eq t (sample-mod-test-return-t "abc")))
+  (should (eq t (sample-mod-test-return-t t)))
+  (should (eq t (sample-mod-test-return-t nil)))
+  (should (eq t (sample-mod-test-return-t ?a))))
 
-(ert-deftest mod-test-return-uname-cmd ()
-  (should (string= "uname -a" (mod-test-return-uname-cmd "-a"))))
+(ert-deftest sample-mod-test-return-uname-cmd ()
+  (should (string= "uname -a" (sample-mod-test-return-uname-cmd "-a"))))
 
-(ert-deftest mod-test-sum ()
-  (should (eq 10 (mod-test-sum 3 7)))
-  (should-error (mod-test-sum "1" 2) :type 'wrong-type-argument)
-  (should-error (mod-test-sum 2 "1") :type 'wrong-type-argument))
+(ert-deftest sample-mod-test-sum ()
+  (should (eq 10 (sample-mod-test-sum 3 7)))
+  (should-error (sample-mod-test-sum "1" 2) :type 'wrong-type-argument)
+  (should-error (sample-mod-test-sum 2 "1") :type 'wrong-type-argument))
 
-(ert-deftest mod-test-vector-test ()
+(ert-deftest sample-mod-test-vector-test ()
   (dolist (s '(2 10 100 1000))
     (dolist (e '(42 foo "foo" 3.14))
       (let* ((v-ref (make-vector 2 e))
              (eq-ref (eq (aref v-ref 0) (aref v-ref 1)))
              (v-test (make-vector s nil)))
 
-        (should (eq (mod-test-vector-fill v-test e) t))
-        (should (eq (mod-test-vector-eq v-test e) eq-ref))))))
+        (should (eq (sample-mod-test-vector-fill v-test e) t))
+        (should (eq (sample-mod-test-vector-eq v-test e) eq-ref))))))
 
-(ert-deftest mod-test-non-local-exit-signal-test ()
-  (should-error (mod-test-signal)))
+(ert-deftest sample-mod-test-non-local-exit-signal-test ()
+  (should-error (sample-mod-test-signal)))
 
-(ert-deftest mod-test-non-local-exit-throw-test ()
+(ert-deftest sample-mod-test-non-local-exit-throw-test ()
   (should (equal
            (catch 'tag
-             (mod-test-throw)
+             (sample-mod-test-throw)
              (ert-fail "expected throw"))
            42)))
 

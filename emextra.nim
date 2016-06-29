@@ -7,8 +7,10 @@ type Emacs* = object
   libName*: string
 
 proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
+  ## Push function name `fn` to `functions` object.
+  ## This variable is used later by `provide` proc.
   let
-    emacs_func = su.replace(fn, "_", "-")
+    emacs_func = self.libName & "-" & su.replace(fn, "_", "-")
     nim_func = "nimEmacs" & fn
 
   self.functions.add(
