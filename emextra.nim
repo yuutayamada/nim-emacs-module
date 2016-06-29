@@ -40,7 +40,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
      body
 
 
-proc provideString* (self: Emacs): string =
+proc provideString* (self: var Emacs): string =
   su.format("""
 /* Lisp utilities for easier readability (simple wrappers).  */
 
