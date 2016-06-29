@@ -24,7 +24,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
   ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
   ## args: ptr array[0..max_args, emacs_value], data: pointer):
   ## emacs_value {.exportc.}
-  ## The `function_name` is registered as the name in emacs and also
+  ## The `fsym` is registered as the name in emacs and also
   ## be registered in Nim with nimEmacs prefix.
   ## If you include "_" in the function name, it will be converted "-"
   ## in Emacs.
