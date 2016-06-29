@@ -93,4 +93,4 @@ emacs.defun(mod_test_return_uname, 1):
       var (res, _) = execCmdEx("uname " & $buf1 )
       result = env.make_string(env, addr res[0], res.len - 1)
 
-emacs.provide(currentfile)
+emacs.provide()

@@ -5,6 +5,7 @@ import macros as m
 type Emacs* = object
   functions*: string
   libName*: string
+  defunTemplate*: string
 
 proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
   ## Push function name `fn` to `functions` object.
@@ -39,7 +40,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
      body
 
 
-proc provideString* (self: Emacs, package_name: string): string =
+proc provideString* (self: Emacs): string =
   su.format("""
 /* Lisp utilities for easier readability (simple wrappers).  */
 
@@ -82,11 +83,13 @@ emacs_module_init (struct emacs_runtime *ert)
   return 0;
 
 }
-""", self.functions, package_name)
+""", self.functions, self.libName)
 
 
-template provide*(self, package_name: typed): typed =
-  {.emit: provideString(self, package_name).}
+template provide*(self: typed): typed {.dirty.} =
+  static:
+    const temp = self.provideString()
+  {.emit: temp.}
 
 
 template init*(sym: untyped): untyped {.dirty.} =
