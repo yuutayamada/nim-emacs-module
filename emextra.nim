@@ -37,12 +37,8 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
      body
 
 
-template emitBody(body: typed): typed =
-  {.emit: body.}
-
-template provide* (self, package_name: typed) =
-  doAssert(package_name is string)
-  emitBody(su.format("""
+proc provideString* (self: Emacs, package_name: string): string =
+  su.format("""
 /* Lisp utilities for easier readability (simple wrappers).  */
 
 /* Provide FEATURE to Emacs.  */
@@ -84,7 +80,12 @@ emacs_module_init (struct emacs_runtime *ert)
   return 0;
 
 }
-""", self.functions, package_name))
+""", self.functions, package_name)
+
+
+template provide*(self, package_name: typed): typed =
+  {.emit: provideString(self, package_name).}
+
 
 template init*(sym: untyped): untyped =
   static:
