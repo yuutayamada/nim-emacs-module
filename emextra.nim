@@ -98,6 +98,6 @@ template init*(sym: untyped): untyped {.dirty.} =
   static:
     var sym = Emacs()
     let info = instantiationInfo()
-    let currentfile = splitFile(info.filename).name
     sym.functions = ""
-    sym.libName = currentfile
+    sym.libName = splitFile(info.filename).name
+
