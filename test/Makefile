@@ -15,3 +15,6 @@ sample.so: sample.nim
 
 test:
 	$(EMACS) -Q -L . $(LOADPATH) -l test.el -f ert-run-tests-batch-and-exit
+
+clean:
+	rm -fr nimcache sample.so
