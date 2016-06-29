@@ -11,13 +11,6 @@ template init*(sym: untyped): untyped =
     var sym = Emacs()
     sym.functions = ""
 
-template makeProc*(self, fsym, max_args, body: untyped) {.dirty.} =
-  # Add nimEmacs prefix for C function.
-  proc `nimEmacs fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
-                        args: ptr array[0..max_args, emacs_value],
-                        data: pointer): emacs_value {.exportc.} =
-    body
-
 proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
   let
     emacs_func = su.replace(fn, "_", "-")
@@ -32,7 +25,7 @@ proc storeFunction*(self: var Emacs, fn: string, max_args: int) =
 #   immediate, and dirty: http://forum.nim-lang.org/t/1100
 #   expr, stmt, typed, and untyped: http://forum.nim-lang.org/t/2025
 #   http://forum.nim-lang.org/t/2228
-template defun*(self, function_name, max_args, body: untyped) {.dirty.} = ## \
+template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
   ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
   ## args: ptr array[0..max_args, emacs_value], data: pointer):
   ## emacs_value {.exportc.}
@@ -41,9 +34,13 @@ template defun*(self, function_name, max_args, body: untyped) {.dirty.} = ## \
   ## If you include "_" in the function name, it will be converted "-"
   ## in Emacs.
   static:
-    self.storeFunction(astToStr(function_name), max_args)
+    self.storeFunction(astToStr(fsym), max_args)
 
-  self.makeProc(function_name, max_args): body
+  proc `nimEmacs fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
+                        args: ptr array[0..max_args, emacs_value],
+                        data: pointer): emacs_value {.exportc.} =
+     body
+
 
 template emitBody(body: typed): typed =
   {.emit: body.}
