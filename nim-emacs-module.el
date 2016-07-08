@@ -214,6 +214,7 @@ emacs.defun(return_t, 1):
        'nim-emacs-module-compile
      'nim-compile)))
 
+;;;###autoload
 (defun nim-emacs-module-setup-nim-mode ()
   "Setup for nim-mode."
   (remove-hook 'nim-mode-hook 'nim-emacs-module-setup-nim-mode)
