@@ -5,7 +5,6 @@ import macros as m
 type Emacs* = object
   functions*: string
   libName*: string
-  defunTemplate*: string
 
 proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
   ## Push function name `fn` to `functions` object.
