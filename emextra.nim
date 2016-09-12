@@ -17,10 +17,6 @@ proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
            emacs_func, nim_func, max_args, max_args)
   )
 
-# my memo:
-#   immediate, and dirty: http://forum.nim-lang.org/t/1100
-#   expr, stmt, typed, and untyped: http://forum.nim-lang.org/t/2025
-#   http://forum.nim-lang.org/t/2228
 template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
   ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
   ## args: ptr array[0..max_args, emacs_value], data: pointer):
