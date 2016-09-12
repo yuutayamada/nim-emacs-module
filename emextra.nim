@@ -1,6 +1,5 @@
 import strutils
 import emacs_module
-import macros as m
 
 type Emacs* = object
   functions*: string
