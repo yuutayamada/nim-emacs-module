@@ -36,8 +36,8 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
   proc `nimEmacs fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
                         args: ptr array[0..max_args, emacs_value],
                         data: pointer): emacs_value {.exportc.} =
-     body
 
+    body
 
 proc provideString* (self: var Emacs): string =
   su.format("""
