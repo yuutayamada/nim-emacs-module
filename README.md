@@ -18,3 +18,4 @@ See sample.nim and Makefile of test directory
 - [emacs-mruby-test](https://github.com/syohex/emacs-mruby-test)
 - M-x view-emacs-news and then look at `Emacs can now load shared/dynamic libraries (modules).` section
 - modules directory of Emacs repository
+- [GPL Compatible Licenses](https://www.gnu.org/licenses/license-list.html#GPLCompatibleLicenses)
