@@ -1,9 +1,11 @@
 import strutils
 import emacs_module
 
+
 type Emacs* = object
   functions*: string
   libName*: string
+
 
 proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
   ## Push function name `fn` to `functions` object.
@@ -16,6 +18,7 @@ proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
     format("""DEFUN ("$1", $2, $3, $4, NULL, NULL);""",
            emacs_func, nim_func, max_args, max_args)
   )
+
 
 template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
   ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
@@ -32,6 +35,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
                args: ptr array[0..max_args, emacs_value],
                data: pointer): emacs_value {.extern: "nimEmacs_" & self.libName & "_$1".} =
     body
+
 
 proc provideString* (self: var Emacs): string =
   format("""
