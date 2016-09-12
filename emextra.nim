@@ -1,4 +1,4 @@
-import strutils as su
+import strutils
 import emacs_module
 import macros as m
 
@@ -10,11 +10,11 @@ proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
   ## Push function name `fn` to `functions` object.
   ## This variable is used later by `provide` proc.
   let
-    emacs_func = su.replace(self.libName & "-" & fn, "_", "-")
     nim_func = "nimEmacs" & fn
+    emacs_func = replace(self.libName & "-" & fn, "_", "-")
 
   self.functions.add(
-    su.format("""DEFUN ("$1", $2, $3, $4, NULL, NULL);""",
+    format("""DEFUN ("$1", $2, $3, $4, NULL, NULL);""",
               emacs_func, nim_func, max_args, max_args)
   )
 
@@ -40,7 +40,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
     body
 
 proc provideString* (self: var Emacs): string =
-  su.format("""
+  format("""
 /* Lisp utilities for easier readability (simple wrappers).  */
 
 /* Provide FEATURE to Emacs.  */
