@@ -10,12 +10,12 @@ proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
   ## Push function name `fn` to `functions` object.
   ## This variable is used later by `provide` proc.
   let
-    nim_func = "nimEmacs" & fn
     emacs_func = replace(self.libName & "-" & fn, "_", "-")
+    nim_func = "nimEmacs_" & self.libName & "_" & fn
 
   self.functions.add(
     format("""DEFUN ("$1", $2, $3, $4, NULL, NULL);""",
-              emacs_func, nim_func, max_args, max_args)
+           emacs_func, nim_func, max_args, max_args)
   )
 
 # my memo:
@@ -33,10 +33,9 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
   static:
     self.pushFunction(astToStr(fsym), max_args)
 
-  proc `nimEmacs fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
-                        args: ptr array[0..max_args, emacs_value],
-                        data: pointer): emacs_value {.exportc.} =
-
+  proc `fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
+               args: ptr array[0..max_args, emacs_value],
+               data: pointer): emacs_value {.extern: "nimEmacs_" & self.libName & "_$1".} =
     body
 
 proc provideString* (self: var Emacs): string =
