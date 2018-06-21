@@ -81,7 +81,7 @@ type
       ## Private data; users should not touch this.
     get_environment: proc(ert: ptr emacs_runtime): ptr emacs_env {.cdecl.}
 
-  emacs_value* {.importc: "struct emacs_value_tag *",
+  emacs_value* {.importc: "emacs_value",
                  header: "<emacs-module.h>".} = pointer
 
   emacs_funcall_exit* = enum
@@ -89,7 +89,7 @@ type
     emacs_funcall_exit_signal = 1, # Function has signaled an error using `signal'.
     emacs_funcall_exit_throw  = 2  # Function has exit using `throw'.
 
-  emacs_env* {.importc: "struct emacs_env_25",
+  emacs_env* {.importc: "emacs_env",
                header: "<emacs-module.h>".} = object
     size: ptrdiff_t
     private_members*: ptr emacs_env_private
