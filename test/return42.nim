@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 {.emit:"int plugin_is_GPL_compatible;".}
 
 import emacs_module             # primitive wrapper for emacs_module.h
-import emacs_module/emextra     # helper library
+import emacs_module/helpers     # helper library
 
 init(emacs)
 
