@@ -13,7 +13,7 @@ something wrong... So beware. (PRs are welcome!)
 
 1. Clone this repo.
 2. `cd test`
-3. `make EMACS_MODULE_DIR=../include/emacs25/` (this works on any Emacs version, 27.x too.)
+3. `make sample EMACS_MODULE_DIR=../include/emacs25/` (this works on any Emacs version, 27.x too.)
 
 If you don't have Emacs installed and want to generate just the
 `sample.so`, do:

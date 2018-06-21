@@ -4,18 +4,8 @@ EMACS ?= emacs
 
 NIM_CFLAGS = --passC:-I$(EMACS_MODULE_DIR) --passC:-std=gnu99
 
-.PHONY: clean test sample return42
+.PHONY: return42 test_return42 sample test_sample clean test all
 
-all: sample
-
-## sample
-sample: clean sample.so test_sample
-
-sample.so: sample.nim
-	nim c --out:sample.so --app:lib $(NIM_CFLAGS) $<
-
-test_sample:
-	$(EMACS) --batch -L . $(LOADPATH) -l test-sample.el -f ert-run-tests-batch-and-exit
 
 ## return42
 return42: clean return42.so test_return42
@@ -26,5 +16,20 @@ return42.so: return42.nim
 test_return42:
 	$(EMACS) --batch -L . $(LOADPATH) -l test-return42.el -f ert-run-tests-batch-and-exit
 
+
+## sample
+sample: clean sample.so test_sample
+
+sample.so: sample.nim
+	nim c --out:sample.so --app:lib $(NIM_CFLAGS) $<
+
+test_sample:
+	$(EMACS) --batch -L . $(LOADPATH) -l test-sample.el -f ert-run-tests-batch-and-exit
+
+
 clean:
 	rm -fr nimcache *.so
+
+test: test_return42 test_sample
+
+all: return42 sample
