@@ -33,7 +33,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
 
   proc `fsym`*(env: ptr emacs_env, nargs: ptrdiff_t,
                args: ptr array[0..max_args, emacs_value],
-               data: pointer): emacs_value {.extern: "nimEmacs_" & self.libName & "_$1".} =
+               data: pointer): emacs_value {.exportc,extern: "nimEmacs_" & self.libName & "_$1".} =
     body
 
 
