@@ -11,11 +11,9 @@ something wrong... So beware. (PRs are welcome!)
 
 ## Usage
 
-1. git clone https://github.com/kaushalmodi/nim-emacs-module
-2. cd test
-3. make
-
-**This does not work as of now -- See https://github.com/yuutayamada/nim-emacs-module/issues/2 .**
+1. `git clone https://github.com/kaushalmodi/nim-emacs-module`
+2. `cd test`
+3. `make EMACS_MODULE_DIR=/path/containing/emacs-module.h`
 
 ## Other References
 - [Introduction to Emacs modules](http://diobla.info/blog-archive/modules-tut.html)

@@ -1,8 +1,8 @@
-# Please set emacs/src directory to include emacs-module.h
-EMACS_SRC ?= $(shell dirname `which emacs`)
+# !! Set EMACS_MODULE_DIR to the directory containing the emacs-module.h !!
+EMACS_MODULE_DIR ?= $(shell dirname `which emacs`)
 EMACS ?= emacs
 
-CFLAGS = --passC:-I$(EMACS_SRC) --passC:-std=gnu99
+CFLAGS = --passC:-I$(EMACS_MODULE_DIR) --passC:-std=gnu99
 
 .PHONY: test
 
