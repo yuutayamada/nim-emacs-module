@@ -77,20 +77,20 @@ emacs.defun(mod_test_throw, 0):
 
 # copy_string_contents
 emacs.defun(mod_test_return_uname_cmd, 1):
-  var len: ptrdiff_t
-  if (env.copy_string_contents(env, args[0], nil, addr len)):
-    var buf1 = newString(len)
-    if (env.copy_string_contents(env, args[0], addr buf1[0], addr len)):
+  var l: ptrdiff_t
+  if (env.copy_string_contents(env, args[0], nil, addr l)):
+    var buf1 = newString(l)
+    if (env.copy_string_contents(env, args[0], addr buf1[0], addr l)):
       var res = "uname " & $buf1
-      result = env.make_string(env, addr res[0], res.len - 1 )
+      result = env.make_string(env, addr res[0], res.high)
 
 from osproc import execCmdEx
 emacs.defun(mod_test_return_uname, 1):
-  var len: ptrdiff_t
-  if (env.copy_string_contents(env, args[0], nil, addr len)):
-    var buf1 = newString(len)
-    if (env.copy_string_contents(env, args[0], addr buf1[0], addr len)):
+  var l: ptrdiff_t
+  if (env.copy_string_contents(env, args[0], nil, addr l)):
+    var buf1 = newString(l)
+    if (env.copy_string_contents(env, args[0], addr buf1[0], addr l)):
       var (res, _) = execCmdEx("uname " & $buf1 )
-      result = env.make_string(env, addr res[0], res.len - 1)
+      result = env.make_string(env, addr res[0], res.high)
 
 emacs.provide()
