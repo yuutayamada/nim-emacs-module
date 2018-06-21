@@ -81,7 +81,7 @@ type
       ## Private data; users should not touch this.
     get_environment: proc(ert: ptr emacs_runtime): ptr emacs_env {.cdecl.}
 
-  emacs_value* {.importc: "struct emacs_value_tag",
+  emacs_value* {.importc: "struct emacs_value_tag *",
                  header: "<emacs-module.h>".} = pointer
 
   emacs_funcall_exit* = enum
@@ -174,4 +174,3 @@ type
 proc emacs_module_init*(ert: ptr emacs_runtime): cint
     {.importc: "emacs_module_init", header: "<emacs_module.h>".} ## \
       ## Every module should define a function as follows.
-
