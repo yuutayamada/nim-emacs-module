@@ -11,7 +11,7 @@ something wrong... So beware. (PRs are welcome!)
 
 ## Usage Example
 
-1. `git clone https://github.com/yuutayamada/nim-emacs-module`
+1. Clone this repo.
 2. `cd test`
 3. `make EMACS_MODULE_DIR=../include/emacs25/` (this works on any Emacs version, 27.x too.)
 
@@ -79,4 +79,4 @@ Ran 1 tests, 1 results as expected (2018-06-21 16:48:28-0400, 0.000766 sec)
 
 
 [diobla]: http://diobla.info/blog-archive/modules-tut.html
-[return42]: https://github.com/kaushalmodi/nim-emacs-module/blob/master/test/return42.nim
+[return42]: test/return42.nim
