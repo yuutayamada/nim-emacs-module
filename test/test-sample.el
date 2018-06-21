@@ -1,4 +1,4 @@
-;;; test.el --- test for this repository -*- lexical-binding: t; -*-
+;;; test-sample.el --- test for this repository -*- lexical-binding: t; -*-
 
 ;; Copyright (C) 2015 by Yuta Yamada
 
@@ -69,4 +69,4 @@
 ;; no-byte-compile: t
 ;; End:
 
-;;; test.el ends here
+;;; test-sample.el ends here
