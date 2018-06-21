@@ -79,18 +79,20 @@ emacs.defun(mod_test_throw, 0):
 emacs.defun(mod_test_return_uname_cmd, 1):
   var l: ptrdiff_t
   if (env.copy_string_contents(env, args[0], nil, addr l)):
-    var buf1 = newString(l)
+    var buf1 = newString(l-1)
     if (env.copy_string_contents(env, args[0], addr buf1[0], addr l)):
       var res = "uname " & $buf1
-      result = env.make_string(env, addr res[0], res.high)
+      result = env.make_string(env, addr res[0], res.len)
 
 from osproc import execCmdEx
+from strutils import strip
 emacs.defun(mod_test_return_uname, 1):
   var l: ptrdiff_t
   if (env.copy_string_contents(env, args[0], nil, addr l)):
-    var buf1 = newString(l)
+    var buf1 = newString(l-1)
     if (env.copy_string_contents(env, args[0], addr buf1[0], addr l)):
       var (res, _) = execCmdEx("uname " & $buf1 )
-      result = env.make_string(env, addr res[0], res.high)
+      res = res.strip()
+      result = env.make_string(env, addr res[0], res.len)
 
 emacs.provide()

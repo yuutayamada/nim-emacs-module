@@ -35,9 +35,6 @@
   (should (eq t (sample-mod-test-return-t nil)))
   (should (eq t (sample-mod-test-return-t ?a))))
 
-(ert-deftest sample-mod-test-return-uname-cmd ()
-  (should (string= "uname -a" (sample-mod-test-return-uname-cmd "-a"))))
-
 (ert-deftest sample-mod-test-sum ()
   (should (eq 10 (sample-mod-test-sum 3 7)))
   (should-error (sample-mod-test-sum "1" 2) :type 'wrong-type-argument)
@@ -62,6 +59,15 @@
              (sample-mod-test-throw)
              (ert-fail "expected throw"))
            42)))
+
+(ert-deftest sample-mod-test-string ()
+  (should (string= "uname -a" (sample-mod-test-return-uname-cmd "-a"))))
+
+(ert-deftest sample-mod-test-uname ()
+  (require 'subr-x)
+  (let ((ref-uname-a-output
+         (string-trim (shell-command-to-string "uname -a"))))
+    (should (string= ref-uname-a-output (sample-mod-test-return-uname "-a")))))
 
 ;; Local Variables:
 ;; coding: utf-8
