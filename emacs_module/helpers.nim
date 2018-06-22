@@ -83,17 +83,18 @@ emacs_module_init (struct emacs_runtime *ert)
 """, self.functions, self.libName)
 
 
-template provide*(self: typed): typed {.dirty.} =
+template provide*(self: Emacs) {.dirty.} =
   static:
     const temp = self.provideString()
   {.emit: temp.}
 
 
-template init*(sym: untyped): untyped {.dirty.} =
+template init*(sym: untyped) {.dirty.} =
   from os import splitFile
 
   static:
-    var sym = Emacs()
+    var `sym` = Emacs()
     let info = instantiationInfo()
     sym.functions = ""
+    # If the file name is foo.nim, let the libary name to foo.
     sym.libName = splitFile(info.filename).name
