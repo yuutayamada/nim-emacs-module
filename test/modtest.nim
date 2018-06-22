@@ -17,6 +17,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ]#
 
+# Official test file for Emacs Modules:
+#   http://git.savannah.gnu.org/cgit/emacs.git/tree/test/data/emacs-module/mod-test.c
+
 # `plugin_is_GPL_compatible` indicates that its code is
 # released under the GPL or compatible license; Emacs will refuse to
 # load modules that don't export such a symbol.
@@ -49,6 +52,22 @@ struct emacs_env_26
 			   emacs_value global_reference)
     EMACS_ATTRIBUTE_NONNULL(1);
 ]#
+
+# /* Return a global reference.  */
+# static emacs_value
+# Fmod_test_globref_make (emacs_env *env, ptrdiff_t nargs, emacs_value args[],
+# 			void *data)
+# {
+#   /* Make a big string and make it global.  */
+#   char str[26 * 100];
+#   for (int i = 0; i < sizeof str; i++)
+#     str[i] = 'a' + (i % 26);
+
+#   /* We don't need to null-terminate str.  */
+#   emacs_value lisp_str = env->make_string (env, str, sizeof str);
+#   return env->make_global_ref (env, lisp_str);
+# }
+
 
 #[
   /* Non-local exit handling.  */
@@ -101,6 +120,44 @@ emacs.defun(throw, 0):
   env.non_local_exit_throw(env, env.intern(env, "tag"),
                            env.make_integer(env, 42))
   result = env.intern(env, "nil")
+
+# /* Call argument function, catch all non-local exists and return
+#    either normal result or a list describing the non-local exit.  */
+# static emacs_value
+# Fmod_test_non_local_exit_funcall (emacs_env *env, ptrdiff_t nargs,
+# 				  emacs_value args[], void *data)
+# {
+#   assert (nargs == 1);
+#   emacs_value result = env->funcall (env, args[0], 0, NULL);
+#   emacs_value non_local_exit_symbol, non_local_exit_data;
+#   enum emacs_funcall_exit code
+#     = env->non_local_exit_get (env, &non_local_exit_symbol,
+# 			       &non_local_exit_data);
+#   switch (code)
+#     {
+#     case emacs_funcall_exit_return:
+#       return result;
+#     case emacs_funcall_exit_signal:
+#       {
+#         env->non_local_exit_clear (env);
+#         emacs_value Flist = env->intern (env, "list");
+#         emacs_value list_args[] = {env->intern (env, "signal"),
+# 				   non_local_exit_symbol, non_local_exit_data};
+#         return env->funcall (env, Flist, 3, list_args);
+#       }
+#     case emacs_funcall_exit_throw:
+#       {
+#         env->non_local_exit_clear (env);
+#         emacs_value Flist = env->intern (env, "list");
+#         emacs_value list_args[] = {env->intern (env, "throw"),
+# 				   non_local_exit_symbol, non_local_exit_data};
+#         return env->funcall (env, Flist, 3, list_args);
+#       }
+#     }
+
+#   /* Never reached.  */
+#   return env->intern (env, "nil");;
+# }
 
 #[
   /* Function registration.  */
@@ -256,6 +313,28 @@ emacs.defun(uname, 1):
       res = res.strip()
       result = env.make_string(env, addr res[0], res.len)
 
+# /* Return a copy of the argument string where every 'a' is replaced
+#    with 'b'.  */
+# static emacs_value
+# Fmod_test_string_a_to_b (emacs_env *env, ptrdiff_t nargs, emacs_value args[],
+# 			 void *data)
+# {
+#   emacs_value lisp_str = args[0];
+#   ptrdiff_t size = 0;
+#   char * buf = NULL;
+
+#   env->copy_string_contents (env, lisp_str, buf, &size);
+#   buf = malloc (size);
+#   env->copy_string_contents (env, lisp_str, buf, &size);
+
+#   for (ptrdiff_t i = 0; i + 1 < size; i++)
+#     if (buf[i] == 'a')
+#       buf[i] = 'b';
+
+#   return env->make_string (env, buf, size - 1);
+# }
+
+
 #[
   /* Embedded pointer type.  */
   emacs_value (*make_user_ptr) (emacs_env *env,
@@ -267,7 +346,81 @@ emacs.defun(uname, 1):
     EMACS_ATTRIBUTE_NONNULL(1);
   void (*set_user_ptr) (emacs_env *env, emacs_value uptr, void *ptr)
     EMACS_ATTRIBUTE_NONNULL(1);
+]#
 
+# /* Embedded pointers in lisp objects. */
+
+# /* C struct (pointer to) that will be embedded.  */
+# struct super_struct
+# {
+#   int amazing_int;
+#   char large_unused_buffer[512];
+# };
+
+# /* Return a new user-pointer to a super_struct, with amazing_int set
+#    to the passed parameter.  */
+# static emacs_value
+# Fmod_test_userptr_make (emacs_env *env, ptrdiff_t nargs, emacs_value args[],
+# 			void *data)
+# {
+#   struct super_struct *p = calloc (1, sizeof *p);
+#   p->amazing_int = env->extract_integer (env, args[0]);
+#   return env->make_user_ptr (env, free, p);
+# }
+
+# /* Return the amazing_int of a passed 'user-pointer to a super_struct'.  */
+# static emacs_value
+# Fmod_test_userptr_get (emacs_env *env, ptrdiff_t nargs, emacs_value args[],
+# 		       void *data)
+# {
+#   struct super_struct *p = env->get_user_ptr (env, args[0]);
+#   return env->make_integer (env, p->amazing_int);
+# }
+
+# static emacs_value invalid_stored_value;
+
+# /* The next two functions perform a possibly-invalid operation: they
+#    store a value in a static variable and load it.  This causes
+#    undefined behavior if the environment that the value was created
+#    from is no longer live.  The module assertions check for this
+#    error.  */
+
+# static emacs_value
+# Fmod_test_invalid_store (emacs_env *env, ptrdiff_t nargs, emacs_value *args,
+#                          void *data)
+# {
+#   return invalid_stored_value = env->make_integer (env, 123);
+# }
+
+# static emacs_value
+# Fmod_test_invalid_load (emacs_env *env, ptrdiff_t nargs, emacs_value *args,
+#                         void *data)
+# {
+#   return invalid_stored_value;
+# }
+
+# /* An invalid finalizer: Finalizers are run during garbage collection,
+#    where Lisp code can’t be executed.  -module-assertions tests for
+#    this case.  */
+
+# static emacs_env *current_env;
+
+# static void
+# invalid_finalizer (void *ptr)
+# {
+#   current_env->intern (current_env, "nil");
+# }
+
+# static emacs_value
+# Fmod_test_invalid_finalizer (emacs_env *env, ptrdiff_t nargs, emacs_value *args,
+#                              void *data)
+# {
+#   current_env = env;
+#   env->make_user_ptr (env, invalid_finalizer, NULL);
+#   return env->funcall (env, env->intern (env, "garbage-collect"), 0, NULL);
+# }
+
+#[
   void (*(*get_user_finalizer) (emacs_env *env, emacs_value uptr))
     (void *) EMACS_NOEXCEPT EMACS_ATTRIBUTE_NONNULL(1);
   void (*set_user_finalizer) (emacs_env *env,
