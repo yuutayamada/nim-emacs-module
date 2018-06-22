@@ -27,6 +27,23 @@
 (require 'modtest)
 
 
+(ert-deftest modtest-non-local-exit-signal-test ()
+  (should-error (modtest-signal)))
+
+(ert-deftest modtest-non-local-exit-throw-test ()
+  (should (equal
+           (catch 'tag
+             (modtest-throw)
+             (ert-fail "expected throw"))
+           42)))
+
+(ert-deftest modtest-return-t ()
+  (should (eq t (modtest-return-t 0)))
+  (should (eq t (modtest-return-t "abc")))
+  (should (eq t (modtest-return-t t)))
+  (should (eq t (modtest-return-t nil)))
+  (should (eq t (modtest-return-t ?a))))
+
 (ert-deftest modtest-get-type ()
   (should (eq 'string (modtest-get-type "abc")))
   (should (eq 'integer (modtest-get-type 42)))
@@ -54,22 +71,17 @@
   (should (eq t (modtest-is-true '(1 2 3))))
   (should (eq t (modtest-is-true (list 1 2 3)))))
 
-(ert-deftest modtest-non-local-exit-signal-test ()
-  (should-error (modtest-signal)))
-
-(ert-deftest modtest-non-local-exit-throw-test ()
-  (should (equal
-           (catch 'tag
-             (modtest-throw)
-             (ert-fail "expected throw"))
-           42)))
-
-(ert-deftest modtest-return-t ()
-  (should (eq t (modtest-return-t 0)))
-  (should (eq t (modtest-return-t "abc")))
-  (should (eq t (modtest-return-t t)))
-  (should (eq t (modtest-return-t nil)))
-  (should (eq t (modtest-return-t ?a))))
+(ert-deftest modtest-eq ()
+  (should (eq t (modtest-eq nil nil)))
+  (should (eq t (modtest-eq t t)))
+  (should (eq nil (modtest-eq nil t)))
+  (should (eq nil (modtest-eq "abc" "abc"))) ;These are *not* the same Lisp objects!
+  (should (eq nil (modtest-eq "" nil)))
+  (should (eq t (modtest-eq 42 42)))
+  (should (eq t (modtest-eq ?a ?a)))
+  (should (eq nil (modtest-eq 42 43)))
+  (should (eq nil (modtest-eq 42.0 42.0))) ;These are *not* the same Lisp objects!
+  (should (eq nil (modtest-eq (cons 1 2) (cons 1 2))))) ;These are *not* the same Lisp objects!
 
 (ert-deftest modtest-sum ()
   (should (eq 10 (modtest-sum 3 7)))
