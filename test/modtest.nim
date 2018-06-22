@@ -53,6 +53,19 @@ struct emacs_env_26
 #[
   /* Non-local exit handling.  */
 
+  #[
+      Exit status enum:
+
+      /* Function has returned normally.  */
+      emacs_funcall_exit_return = 0,
+
+      /* Function has signaled an error using `signal'.  */
+      emacs_funcall_exit_signal = 1,
+
+      /* Function has exit using `throw'.  */
+      emacs_funcall_exit_throw = 2,
+  ]#
+
   enum emacs_funcall_exit (*non_local_exit_check) (emacs_env *env)
     EMACS_ATTRIBUTE_NONNULL(1);
 
