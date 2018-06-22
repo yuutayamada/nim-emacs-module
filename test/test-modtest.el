@@ -27,6 +27,33 @@
 (require 'modtest)
 
 
+(ert-deftest modtest-get-type ()
+  (should (eq 'string (modtest-get-type "abc")))
+  (should (eq 'integer (modtest-get-type 42)))
+  (should (eq 'float (modtest-get-type 42.0)))
+  (should (eq 'symbol (modtest-get-type nil)))
+  (should (eq 'symbol (modtest-get-type t)))
+  (should (eq 'symbol (modtest-get-type '())))
+  (should (eq 'cons (modtest-get-type (cons 1 2))))
+  (should (eq 'cons (modtest-get-type '(1 . 2))))
+  (should (eq 'cons (modtest-get-type '(1 2 3)))) ;Interestingly, this is a "cons" too.
+  (should (eq 'cons (modtest-get-type (list 1 2 3))))) ;.. and this too!
+
+(ert-deftest modtest-is-true ()
+  (should (eq nil (modtest-is-true nil)))
+  (should (eq nil (modtest-is-true '())))
+  (should (eq nil (modtest-is-true ())))
+  (should (eq nil (modtest-is-true (not t))))
+  (should (eq t (modtest-is-true "abc")))
+  (should (eq t (modtest-is-true "")))
+  (should (eq t (modtest-is-true 42)))
+  (should (eq t (modtest-is-true 42.0)))
+  (should (eq t (modtest-is-true t)))
+  (should (eq t (modtest-is-true (cons 1 2))))
+  (should (eq t (modtest-is-true '(1 . 2))))
+  (should (eq t (modtest-is-true '(1 2 3))))
+  (should (eq t (modtest-is-true (list 1 2 3)))))
+
 (ert-deftest modtest-non-local-exit-signal-test ()
   (should-error (modtest-signal)))
 

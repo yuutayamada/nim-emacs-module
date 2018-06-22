@@ -145,14 +145,24 @@ emacs.defun(return_t, 1):
     EMACS_ATTRIBUTE_NONNULL(1);
 ]#
 
+emacs.defun(get_type, 1):
+  ## Returns the Emacs-Lisp symbol of the argument type.
+  env.type_of(env, args[0])
+
+emacs.defun(is_true, 1):
+  ## Returns ``t`` if argument is non-nil, else returns ``nil``.
+  if env.is_not_nil(env, args[0]):
+    env.intern(env, "t")
+  else:
+    env.intern(env, "nil")
+
 emacs.defun(sum, 2):
+  ## Returns the sum of two integers.
   assert(nargs == 2)
   let
     a = env.extract_integer(env, args[0])
     b = env.extract_integer(env, args[1])
-    s = a + b
-
-  env.make_integer(env, s)
+  env.make_integer(env, a + b)
 
 #[
   /* Create a Lisp string from a utf8 encoded string.  */
