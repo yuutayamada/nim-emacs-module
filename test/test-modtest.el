@@ -45,6 +45,21 @@
              (ert-fail "expected throw"))
            42)))
 
+(ert-deftest modtest-non-local-exit-funcall ()
+  ;; emacs_funcall_exit_return
+  (should (equal t (modtest-non-local-exit-funcall (lambda () t))))
+  (should (equal 123 (modtest-non-local-exit-funcall (lambda () 123))))
+  ;; emacs_funcall_exit_signal
+  (should (equal '(signal user-error ("oh noes!"))
+                 (modtest-non-local-exit-funcall
+                  (lambda ()
+                    (user-error "oh noes!")))))
+  ;; emacs_funcall_exit_throw
+  (should (equal '(throw foo 123)
+                 (modtest-non-local-exit-funcall
+                  (lambda ()
+                    (throw 'foo 123))))))
+
 (ert-deftest modtest-make-string ()
   (should (string= "--" (modtest-make-string 2 ?-)))
   (should (string= "aaaaa" (modtest-make-string 5 ?a)))

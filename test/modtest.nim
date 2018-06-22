@@ -113,43 +113,42 @@ emacs.defun(throw, 0):
                            env.make_integer(env, 42))
   result = env.intern(env, "nil")
 
-# /* Call argument function, catch all non-local exists and return
-#    either normal result or a list describing the non-local exit.  */
-# static emacs_value
-# Fmod_test_non_local_exit_funcall (emacs_env *env, ptrdiff_t nargs,
-# 				  emacs_value args[], void *data)
-# {
-#   assert (nargs == 1);
-#   emacs_value result = env->funcall (env, args[0], 0, NULL);
-#   emacs_value non_local_exit_symbol, non_local_exit_data;
-#   enum emacs_funcall_exit code
-#     = env->non_local_exit_get (env, &non_local_exit_symbol,
-# 			       &non_local_exit_data);
-#   switch (code)
-#     {
-#     case emacs_funcall_exit_return:
-#       return result;
-#     case emacs_funcall_exit_signal:
-#       {
-#         env->non_local_exit_clear (env);
-#         emacs_value Flist = env->intern (env, "list");
-#         emacs_value list_args[] = {env->intern (env, "signal"),
-# 				   non_local_exit_symbol, non_local_exit_data};
-#         return env->funcall (env, Flist, 3, list_args);
-#       }
-#     case emacs_funcall_exit_throw:
-#       {
-#         env->non_local_exit_clear (env);
-#         emacs_value Flist = env->intern (env, "list");
-#         emacs_value list_args[] = {env->intern (env, "throw"),
-# 				   non_local_exit_symbol, non_local_exit_data};
-#         return env->funcall (env, Flist, 3, list_args);
-#       }
-#     }
+# non_local_exit_get, non_local_exit_clear
+emacs.defun(non_local_exit_funcall, 1):
+  ## Call argument function (which takes 0 arguments), catch all
+  ## non-local exists and return either normal result or a list
+  ## describing the non-local exit.
+  let elispFuncallRet = env.funcall(env, args[0], 0, nil)
+  var
+    non_local_exit_symbol, non_local_exit_data: emacs_value
+  let exitCode: emacs_funcall_exit =
+    env.non_local_exit_get(env,
+                           addr non_local_exit_symbol,
+                           addr non_local_exit_data)
 
-#   /* Never reached.  */
-#   return env->intern (env, "nil");;
-# }
+  case exitCode
+  of emacs_funcall_exit_return:
+    return elispFuncallRet
+  of emacs_funcall_exit_signal:
+    env.non_local_exit_clear(env)
+    let
+      Flist = env.intern(env, "list")
+      listArgs: array[3, emacs_value] = [env.intern(env, "signal"),
+                                         non_local_exit_symbol,
+                                         non_local_exit_data]
+    # TODO: Need to understand why unsafeAddr needs to be used below
+    # instead of addr. Using addr gives this error: expression has no
+    # address; maybe use 'unsafeAddr'. Though.. with unsafeAddr, this
+    # function seems to work fine.
+    return env.funcall(env, Flist, 3, unsafeAddr listArgs[0])
+  of emacs_funcall_exit_throw:
+    env.non_local_exit_clear(env)
+    let
+      Flist = env.intern(env, "list")
+      listArgs: array[3, emacs_value] = [env.intern(env, "throw"),
+                                         non_local_exit_symbol,
+                                         non_local_exit_data]
+    return env.funcall(env, Flist, 3, unsafeAddr listArgs[0])
 
 #[
   /* Function registration.  */
