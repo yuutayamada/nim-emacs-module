@@ -289,7 +289,7 @@ emacs.defun(uname, 1):
     EMACS_ATTRIBUTE_NONNULL(1);
 ]#
 
-# vec_get
+# vec_size, vec_get
 emacs.defun(vector_eq, 2):
   var
     vec = args[0]
@@ -300,7 +300,7 @@ emacs.defun(vector_eq, 2):
       result = env.intern(env, "nil")
   result = env.intern(env, "t")
 
-# vec_size
+# vec_size, vec_set
 emacs.defun(vector_fill, 2):
   var
     vec = args[0]
