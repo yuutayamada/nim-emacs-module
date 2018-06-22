@@ -84,9 +84,18 @@
   (should (eq nil (modtest-eq (cons 1 2) (cons 1 2))))) ;These are *not* the same Lisp objects!
 
 (ert-deftest modtest-sum ()
-  (should (eq 10 (modtest-sum 3 7)))
+  (should (equal 10 (modtest-sum 3 7)))
+  (should-error (modtest-sum 3) :type 'wrong-number-of-arguments)
   (should-error (modtest-sum "1" 2) :type 'wrong-type-argument)
-  (should-error (modtest-sum 2 "1") :type 'wrong-type-argument))
+  (should-error (modtest-sum 2 "1") :type 'wrong-type-argument)
+  (should-error (modtest-sum 2.0 1.0) :type 'wrong-type-argument))
+
+(ert-deftest modtest-sum-float ()
+  (should (equal 10.0 (modtest-sum-float 3.3 6.7)))
+  (should-error (modtest-sum-float 3.0) :type 'wrong-number-of-arguments)
+  (should-error (modtest-sum-float "1" 2) :type 'wrong-type-argument)
+  (should-error (modtest-sum-float 2 "1") :type 'wrong-type-argument)
+  (should-error (modtest-sum-float 2 1) :type 'wrong-type-argument))
 
 (ert-deftest modtest-string ()
   (should (string= "The quick brown fox jumped over the lazy dog." (modtest-lazy)))

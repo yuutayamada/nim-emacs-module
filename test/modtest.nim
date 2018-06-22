@@ -179,11 +179,21 @@ emacs.defun(eq, 2):
 
 emacs.defun(sum, 2):
   ## Returns the sum of two integers.
-  assert(nargs == 2)
+  # assert(nargs == 2)
+  # The above assert statement is never reached! Emacs throws the
+  # "wrong-number-of-arguments" error signal before the execution
+  # reaches this assert statement.
   let
     a = env.extract_integer(env, args[0])
     b = env.extract_integer(env, args[1])
   env.make_integer(env, a + b)
+
+emacs.defun(sum_float, 2):
+  ## Returns the sum of two floats.
+  let
+    a = env.extract_float(env, args[0])
+    b = env.extract_float(env, args[1])
+  env.make_float(env, a + b)
 
 #[
   /* Create a Lisp string from a utf8 encoded string.  */
