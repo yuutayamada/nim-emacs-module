@@ -27,6 +27,14 @@
 (require 'modtest)
 
 
+;; TODO: It's not clear how to test if `modtest-globref-make' is doing
+;; the right thing.
+(ert-deftest modtest-globref-make ()
+  (let ((refstr ""))
+    (dotimes (i 100)
+      (setq refstr (concat refstr "abcdefghijklmnopqrstuvwxyz")))
+    (should (string= refstr (modtest-globref-make)))))
+
 (ert-deftest modtest-non-local-exit-signal-test ()
   (should-error (modtest-signal)))
 

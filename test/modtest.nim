@@ -53,21 +53,13 @@ struct emacs_env_26
     EMACS_ATTRIBUTE_NONNULL(1);
 ]#
 
-# /* Return a global reference.  */
-# static emacs_value
-# Fmod_test_globref_make (emacs_env *env, ptrdiff_t nargs, emacs_value args[],
-# 			void *data)
-# {
-#   /* Make a big string and make it global.  */
-#   char str[26 * 100];
-#   for (int i = 0; i < sizeof str; i++)
-#     str[i] = 'a' + (i % 26);
-
-#   /* We don't need to null-terminate str.  */
-#   emacs_value lisp_str = env->make_string (env, str, sizeof str);
-#   return env->make_global_ref (env, lisp_str);
-# }
-
+emacs.defun(globref_make, 0):
+  ## Make a big string and make it global.
+  var str: string
+  for i in 0 ..< (26 * 100):
+    str.add(char('a'.ord + (i mod 26)))
+  let lispStr = env.make_string(env, addr str[0], str.len)
+  return env.make_global_ref(env, lispStr)
 
 #[
   /* Non-local exit handling.  */
