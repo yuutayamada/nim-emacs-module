@@ -8,8 +8,8 @@ type Emacs* = object
 
 
 proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
-  ## Push function name `fn` to `functions` object.
-  ## This variable is used later by `provide` proc.
+  ## Push function name ``fn`` to ``functions`` object.
+  ## This variable is used later by ``provide`` proc.
   let
     emacs_func = replace(self.libName & "-" & fn, "_", "-")
     nim_func = "nimEmacs_" & self.libName & "_" & fn
@@ -20,7 +20,7 @@ proc pushFunction*(self: var Emacs, fn: string, max_args: int) =
   )
 
 
-template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
+template defun*(self: Emacs; fsym: untyped; max_args: int; body: untyped) {.dirty.} = ## \
   ## emacs_func(env: ptr emacs_env, nargs: ptrdiff_t,
   ## args: ptr array[0..max_args, emacs_value], data: pointer):
   ## emacs_value {.exportc.}
@@ -37,7 +37,7 @@ template defun*(self, fsym, max_args, body: untyped) {.dirty.} = ## \
     body
 
 
-proc provideString* (self: var Emacs): string =
+proc provideString* (self: Emacs): string =
   format("""
 /* Lisp utilities for easier readability (simple wrappers).  */
 

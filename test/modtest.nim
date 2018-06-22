@@ -184,6 +184,7 @@ emacs.defun(make_string, 2):
   return env.funcall(env, fSymbol, nargs, addr args[0]) # Return the (funcall make-string ..) returned elisp string
 
 emacs.defun(return_t, 1):
+  ## Returns ``t``, always.
   env.intern(env, "t")
 
 #[
