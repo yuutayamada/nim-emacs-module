@@ -171,6 +171,7 @@ type
                     vec: emacs_value; i: ptrdiff_t; val: emacs_value) {.cdecl.}
     vec_size*: proc (env: ptr emacs_env; vec: emacs_value): ptrdiff_t {.cdecl.}
 
-proc emacs_module_init*(ert: ptr emacs_runtime): cint
-    {.importc: "emacs_module_init", header: "<emacs-module.h>".} ## \
-      ## Every module should define a function as follows.
+# TODO: Below seems to be unused
+# proc emacs_module_init*(ert: ptr emacs_runtime): cint
+#     {.importc: "emacs_module_init", header: "<emacs-module.h>".} ## \
+#       ## Every module should define a function as follows.
