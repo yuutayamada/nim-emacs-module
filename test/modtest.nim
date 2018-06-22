@@ -215,6 +215,7 @@ emacs.defun(return_t, 1):
 
 emacs.defun(get_type, 1):
   ## Returns the Emacs-Lisp symbol of the argument type.
+  ## See http://git.savannah.gnu.org/cgit/emacs.git/tree/src/data.c?id=5583e6460c38c5d613e732934b066421349a5259#n204.
   env.type_of(env, args[0])
 
 emacs.defun(is_true, 1):

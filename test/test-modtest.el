@@ -60,6 +60,7 @@
 (ert-deftest modtest-get-type ()
   (should (eq 'string (modtest-get-type "abc")))
   (should (eq 'integer (modtest-get-type 42)))
+  (should (eq 'integer (modtest-get-type (point))))
   (should (eq 'float (modtest-get-type 42.0)))
   (should (eq 'symbol (modtest-get-type nil)))
   (should (eq 'symbol (modtest-get-type t)))
@@ -67,7 +68,10 @@
   (should (eq 'cons (modtest-get-type (cons 1 2))))
   (should (eq 'cons (modtest-get-type '(1 . 2))))
   (should (eq 'cons (modtest-get-type '(1 2 3)))) ;Interestingly, this is a "cons" too.
-  (should (eq 'cons (modtest-get-type (list 1 2 3))))) ;.. and this too!
+  (should (eq 'cons (modtest-get-type (list 1 2 3)))) ;.. and this too!
+  (should (eq 'window-configuration (modtest-get-type (current-window-configuration))))
+  (should (eq 'marker (modtest-get-type (point-marker))))
+  (should (eq 'buffer (modtest-get-type (current-buffer)))))
 
 (ert-deftest modtest-is-true ()
   (should (eq nil (modtest-is-true nil)))
