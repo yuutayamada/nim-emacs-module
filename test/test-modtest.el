@@ -37,6 +37,11 @@
              (ert-fail "expected throw"))
            42)))
 
+(ert-deftest modtest-make-string ()
+  (should (string= "--" (modtest-make-string 2 ?-)))
+  (should (string= "aaaaa" (modtest-make-string 5 ?a)))
+  (should (string= "" (modtest-make-string 0 ?a))))
+
 (ert-deftest modtest-return-t ()
   (should (eq t (modtest-return-t 0)))
   (should (eq t (modtest-return-t "abc")))

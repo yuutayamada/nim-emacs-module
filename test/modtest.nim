@@ -129,6 +129,12 @@ emacs.defun(throw, 0):
     EMACS_ATTRIBUTE_NONNULL(1, 2);
 ]#
 
+emacs.defun(make_string, 2):
+  ## Returns string created by Emacs-Lisp ``make-string``.
+  let
+    fSymbol = env.intern(env, "make-string") # Get 'make-string
+  return env.funcall(env, fSymbol, nargs, addr args[0]) # Return the (funcall make-string ..) returned elisp string
+
 emacs.defun(return_t, 1):
   env.intern(env, "t".cstring)
 
@@ -232,11 +238,11 @@ emacs.defun(lazy, 0):
 emacs.defun(hello, 1):
   ## Returns "Hello " prefixed to the passed string argument.
   var l: ptrdiff_t
-  if (env.copy_string_contents(env, args[0], nil, addr l)):
-    var name = newString(l-1)
-    if (env.copy_string_contents(env, args[0], addr name[0], addr l)):
-      var res = "Hello " & name
-      result = env.make_string(env, addr res[0], res.len)
+  if (env.copy_string_contents(env, args[0], nil, addr l)): # Get the length of the elisp string args[0] (it's num chars + 1).
+    var name = newString(l-1) # So the actual string length is l-1. Allocate that much space for the name string in Nim.
+    if (env.copy_string_contents(env, args[0], addr name[0], addr l)): # *Now* copy the elisp string args[0] to Nim string name.
+      var res = "Hello " & name # Create a new Nim string res using the name string.
+      return env.make_string(env, addr res[0], res.len) # Convert the Nim string res to elisp string before returning.
 
 from osproc import execCmdEx
 from strutils import strip
