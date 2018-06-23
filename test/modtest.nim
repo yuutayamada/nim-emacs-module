@@ -55,7 +55,7 @@ struct emacs_env_26
 
 emacs.defun(globref_make, 0):
   ## Make a big string and make it global.
-  var str: string
+  var str: string = ""
   for i in 0 ..< (26 * 100):
     str.add(char('a'.ord + (i mod 26)))
   let lispStr = env.make_string(env, addr str[0], str.len)
