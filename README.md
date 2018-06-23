@@ -9,21 +9,21 @@ Note that the Emacs Dynamic Module feature is supported from Emacs
 I'm either Nim and C language's newbie, so probably I'm doing
 something wrong... So beware. (PRs are welcome!)
 
+## Requirements
+
+- Emacs with version 25.1 or higher compiled with the `--with-modules`
+  configure option.
+
 ## Usage Example
 
 1. Clone this repo.
 2. `cd test`
-3. `make sample EMACS_MODULE_DIR=../include/emacs25/` (this works on any Emacs version, 27.x too.)
-
-If you don't have Emacs installed and want to generate just the
-`sample.so`, do:
-
-```
-make sample.so EMACS_MODULE_DIR=../include/emacs25/
-```
+3. `make sample`
+  - If the above `make` step fails, set `EMACS_MODULE_DIR` to the
+    directory containing the `emacs-module.h` header file. Example:
+    `make sample EMACS_MODULE_DIR=/dir/containing/emacs-module.h/`.
 
 ### Output
-
 
 ```
 emacs --batch -L .  -l test.el -f ert-run-tests-batch-and-exit
@@ -56,7 +56,7 @@ emacs.defun(return42, 0):
 Assuming that you already are past Steps 1 and 2 above, do:
 
 ```
-make return42 EMACS_MODULE_DIR=../include/emacs25/
+make return42
 ```
 
 ### Output
