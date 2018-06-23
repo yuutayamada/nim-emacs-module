@@ -22,8 +22,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 # load modules that don't export such a symbol.
 {.emit:"int plugin_is_GPL_compatible;".}
 
-import emacs_module # primitive wrapper for emacs_module.h
-import emextra      # helper library
+import emacs_module             # primitive wrapper for emacs_module.h
+import emacs_module/helpers     # helper library
 
 init(emacs)
 
@@ -77,20 +77,22 @@ emacs.defun(mod_test_throw, 0):
 
 # copy_string_contents
 emacs.defun(mod_test_return_uname_cmd, 1):
-  var len: ptrdiff_t
-  if (env.copy_string_contents(env, args[0], nil, addr len)):
-    var buf1 = newString(len)
-    if (env.copy_string_contents(env, args[0], addr buf1[0], addr len)):
+  var l: ptrdiff_t
+  if (env.copy_string_contents(env, args[0], nil, addr l)):
+    var buf1 = newString(l-1)
+    if (env.copy_string_contents(env, args[0], addr buf1[0], addr l)):
       var res = "uname " & $buf1
-      result = env.make_string(env, addr res[0], res.len - 1 )
+      result = env.make_string(env, addr res[0], res.len)
 
 from osproc import execCmdEx
+from strutils import strip
 emacs.defun(mod_test_return_uname, 1):
-  var len: ptrdiff_t
-  if (env.copy_string_contents(env, args[0], nil, addr len)):
-    var buf1 = newString(len)
-    if (env.copy_string_contents(env, args[0], addr buf1[0], addr len)):
+  var l: ptrdiff_t
+  if (env.copy_string_contents(env, args[0], nil, addr l)):
+    var buf1 = newString(l-1)
+    if (env.copy_string_contents(env, args[0], addr buf1[0], addr l)):
       var (res, _) = execCmdEx("uname " & $buf1 )
-      result = env.make_string(env, addr res[0], res.len - 1)
+      res = res.strip()
+      result = env.make_string(env, addr res[0], res.len)
 
 emacs.provide()

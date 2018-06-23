@@ -65,8 +65,8 @@
 {.emit:\"int plugin_is_GPL_compatible;\".}
 
 
-import emacs_module # Primitive wrapper for emacs_module.h
-import emextra      # Helper library
+import emacs_module         # Primitive wrapper for emacs_module.h
+import emacs_module/helpers # Helper library
 
 
 # You can access following types:

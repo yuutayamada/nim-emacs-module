@@ -97,4 +97,3 @@ template init*(sym: untyped): untyped {.dirty.} =
     let info = instantiationInfo()
     sym.functions = ""
     sym.libName = splitFile(info.filename).name
-
