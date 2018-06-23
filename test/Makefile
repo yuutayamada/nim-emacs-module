@@ -1,6 +1,5 @@
 # !! Set EMACS_MODULE_DIR to the directory containing the emacs-module.h !!
-# EMACS_MODULE_DIR ?= $(shell dirname `which emacs`)
-EMACS_MODULE_DIR ?= ../include/emacs27/
+EMACS_MODULE_DIR ?= $(shell dirname `which emacs`)
 EMACS ?= emacs
 
 NIM_CFLAGS = --passC:-I$(EMACS_MODULE_DIR) --passC:-std=gnu99
