@@ -133,22 +133,20 @@ emacs.defun(non_local_exit_funcall, 1):
     env.non_local_exit_clear(env)
     let
       Flist = env.intern(env, "list")
+    var
       listArgs: array[3, emacs_value] = [env.intern(env, "signal"),
                                          non_local_exit_symbol,
                                          non_local_exit_data]
-    # TODO: Need to understand why unsafeAddr needs to be used below
-    # instead of addr. Using addr gives this error: expression has no
-    # address; maybe use 'unsafeAddr'. Though.. with unsafeAddr, this
-    # function seems to work fine.
-    return env.funcall(env, Flist, 3, unsafeAddr listArgs[0])
+    return env.funcall(env, Flist, 3, addr listArgs[0])
   of emacs_funcall_exit_throw:
     env.non_local_exit_clear(env)
     let
       Flist = env.intern(env, "list")
+    var
       listArgs: array[3, emacs_value] = [env.intern(env, "throw"),
                                          non_local_exit_symbol,
                                          non_local_exit_data]
-    return env.funcall(env, Flist, 3, unsafeAddr listArgs[0])
+    return env.funcall(env, Flist, 3, addr listArgs[0])
 
 #[
   /* Function registration.  */
