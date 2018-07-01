@@ -76,6 +76,7 @@ Ran 1 tests, 1 results as expected (2018-06-21 16:48:28-0400, 0.000766 sec)
 - modules directory of Emacs repository
 - [Go + Emacs Modules](https://mrosset.github.io/emacs-module/)
 - [GPL Compatible Licenses](https://www.gnu.org/licenses/license-list.html#GPLCompatibleLicenses)
+- [Emacs Modules Documentation](http://phst.github.io/emacs-modules.html)
 
 
 [diobla]: http://diobla.info/blog-archive/modules-tut.html
