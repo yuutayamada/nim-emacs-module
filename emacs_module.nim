@@ -53,6 +53,9 @@
 # by default, and must be enabled by using the `--with-modules' option
 # at configure time.
 
+import emacs_module/helpers
+export helpers
+
 type
   intmax_t* {.importc: "intmax_t", header: "<inttypes.h>".} = clonglong
   ptrdiff_t* {.importc: "ptrdiff_t", header: "<stddef.h>".} = int
